@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const Accessor = require('./accessor');
+const Trap = require('./trap');
 
 const storage = new WeakMap();
 
@@ -18,10 +18,10 @@ class Dummy {
 	 *  @memberof  Dummy
 	 */
 	static create(target) {
-		const accessor = new Accessor();
-		const proxy = new Proxy(target, accessor.handler);
+		const trap = new Trap();
+		const proxy = new Proxy(target, trap);
 
-		storage.set(proxy, { target, accessor });
+		storage.set(proxy, { target, trap });
 
 		return proxy;
 	}
@@ -54,9 +54,9 @@ class Dummy {
 			throw new Error(`Unknown Dummy: ${ proxy }`);
 		}
 
-		const { target, accessor } = storage.get(proxy);
+		const { target, trap } = storage.get(proxy);
 
-		accessor.commit();
+		trap.commit();
 
 		return target;
 	}
@@ -66,9 +66,9 @@ class Dummy {
 			throw new Error(`Unknown Dummy: ${ proxy }`);
 		}
 
-		const { target, accessor } = storage.get(proxy);
+		const { target, trap } = storage.get(proxy);
 
-		accessor.rollback();
+		trap.rollback();
 
 		return target;
 	}
