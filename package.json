@@ -1,0 +1,20 @@
+{
+  "name": "@konfirm/dummy",
+  "version": "0.0.0",
+  "description": "Reflect changes to object properties without immediately modifying it",
+  "main": "source/dummy.js",
+  "scripts": {
+    "test": "lab -clr",
+    "test-coverage-html": "lab -clr html -o report.html"
+  },
+  "keywords": [
+    "dummy",
+    "mimic"
+  ],
+  "author": "Rogier Spieker <rogier@konfirm.eu>",
+  "license": "MIT",
+  "devDependencies": {
+    "@konfirm/labrat": "^1.1.0",
+    "eslint-config-strict": "^14.0.1"
+  }
+}
