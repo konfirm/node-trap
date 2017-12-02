@@ -69,4 +69,64 @@ describe('Dummy', () => {
 
 		next();
 	});
+
+	it('rolls back all mutations', (next) => {
+		const subject = { aaa: 'aaa' };
+		const dummy = Dummy.create(subject);
+
+		expect(subject.aaa).to.equal('aaa');
+		expect(dummy.aaa).to.equal('aaa');
+
+		dummy.aaa = 'ZZZ';
+
+		expect(subject.aaa).to.equal('aaa');
+		expect(dummy.aaa).to.equal('ZZZ');
+
+		Dummy.rollback(dummy);
+
+		expect(subject.aaa).to.equal('aaa');
+		expect(dummy.aaa).to.equal('aaa');
+
+		next();
+	});
+
+	it('commits all mutations', (next) => {
+		const subject = { aaa: 'aaa' };
+		const dummy = Dummy.create(subject);
+
+		expect(subject.aaa).to.equal('aaa');
+		expect(dummy.aaa).to.equal('aaa');
+
+		dummy.aaa = 'ZZZ';
+
+		expect(subject.aaa).to.equal('aaa');
+		expect(dummy.aaa).to.equal('ZZZ');
+
+		Dummy.commit(dummy);
+
+		expect(subject.aaa).to.equal('ZZZ');
+		expect(dummy.aaa).to.equal('ZZZ');
+
+		next();
+	});
+
+	it('throws if the proxy is not a known dummy', (next) => {
+		const subject = { aaa: 'aaa' };
+		const dummy = Dummy.create(subject);
+
+		expect(() => Dummy.commit(subject)).to.throw(Error, /^Unknown Dummy/);
+		expect(() => Dummy.commit(dummy)).not.to.throw();
+
+		expect(() => Dummy.rollback(subject)).to.throw(Error, /^Unknown Dummy/);
+		expect(() => Dummy.rollback(dummy)).not.to.throw();
+
+		expect(() => Dummy.purge(subject)).to.throw(Error, /^Unknown Dummy/);
+		expect(() => Dummy.purge(dummy)).not.to.throw();
+
+		expect(() => Dummy.commit(dummy)).to.throw(Error, /^Unknown Dummy/);
+		expect(() => Dummy.rollback(dummy)).to.throw(Error, /^Unknown Dummy/);
+		expect(() => Dummy.purge(dummy)).to.throw(Error, /^Unknown Dummy/);
+
+		next();
+	});
 });

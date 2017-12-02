@@ -19,47 +19,58 @@ class Dummy {
 	 */
 	static create(target) {
 		const accessor = new Accessor();
-		const { proxy, revoke } = Proxy.revocable(target, accessor.handler);
+		const proxy = new Proxy(target, accessor.handler);
 
-		storage.set(proxy, { target, revoke, accessor });
+		storage.set(proxy, { target, accessor });
 
 		return proxy;
 	}
 
 	static checksum(proxy) {
 		return Object.keys(proxy)
-			.sort((one, two) => one < two ? -1 : +(one > two))
-			.reduce((checksum, key) => checksum.update(`${key}:${proxy[key]}`), crypto.createHash('sha256'))
+			//  eslint-disable-next-line no-confusing-arrow, no-magic-numbers
+			.sort((one, two) => one < two ? -1 : Number(one > two))
+			.reduce(
+				(checksum, key) => checksum.update(`${ key }:${ proxy[key] }`),
+				crypto.createHash('sha256')
+			)
 			.digest('hex');
 	}
 
-	static finalize(proxy, commit=true) {
-		if (!storage.has(proxy)) {
-			throw new Error(`Unknown Dummy: ${proxy}`);
-		}
+	static isDummy(proxy) {
+		return storage.has(proxy);
+	}
 
-		const { target, revoke, accessor } = storage.get(proxy);
-
-		revoke();
-
-		if (commit) {
-			accessor.commit();
-		}
-		else {
-			accessor.rollback();
+	static purge(proxy) {
+		if (!this.isDummy(proxy)) {
+			throw new Error(`Unknown Dummy: ${ proxy }`);
 		}
 
 		storage.delete(proxy);
+	}
+
+	static commit(proxy) {
+		if (!this.isDummy(proxy)) {
+			throw new Error(`Unknown Dummy: ${ proxy }`);
+		}
+
+		const { target, accessor } = storage.get(proxy);
+
+		accessor.commit();
 
 		return target;
 	}
 
-	static commit(proxy) {
-		return this.finalize(proxy, true);
-	}
-
 	static rollback(proxy) {
-		return this.finalize(proxy, false);
+		if (!this.isDummy(proxy)) {
+			throw new Error(`Unknown Dummy: ${ proxy }`);
+		}
+
+		const { target, accessor } = storage.get(proxy);
+
+		accessor.rollback();
+
+		return target;
 	}
 }
 
