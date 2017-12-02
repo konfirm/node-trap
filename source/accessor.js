@@ -15,8 +15,8 @@ class Accessor {
 	 *
 	 *  @memberof Accessor
 	 */
-	constructor(delegate) {
-		storage.set(this, { delegate, mutations: [] });
+	constructor() {
+		storage.set(this, { mutations: [] });
 	}
 
 	/**
@@ -47,6 +47,13 @@ class Accessor {
 		return this.search(seek).shift();
 	}
 
+	/**
+	 *  Obtain a function to handle `getOwnPropertyDescriptor` proxy calls, reflecting additions
+	 *  to the proxied object
+	 *
+	 * @return    {Function}  getOwnPropertyDescriptor
+	 * @memberof  Accessor
+	 */
 	descriptor() {
 		return (target, key) => Object.getOwnPropertyDescriptor(target, key) || this.mutations
 			.filter((mut) => mut.key === key)
@@ -57,16 +64,34 @@ class Accessor {
 			}), und);
 	}
 
+	/**
+	 *  Obtain a function to handle the `ownKeys` proxy calls, reflecting additions to the proxied object
+	 *
+	 * @return    {Function}  ownKeys
+	 * @memberof  Accessor
+	 */
 	keys() {
 		return (target) => Object.keys(target)
 			.concat(this.mutations.map((mut) => mut.key))
 			.filter((key, index, all) => all.indexOf(key) === index);
 	}
 
+	/**
+	 *  Obtain a function to handle the `has` proxy calls, reflecting additions to the proxied object
+	 *
+	 * @return    {Function}  has
+	 * @memberof  Accessor
+	 */
 	contains() {
 		return (target, key) => key in target || this.mutations.filter((mut) => mut.key === key).length > 0;
 	}
 
+	/**
+	 *  Obtain a function to handle the `get` proxy calls, reflecting mutations to the proxied object
+	 *
+	 * @return    {Function}  get
+	 * @memberof  Accessor
+	 */
 	getter() {
 		return (target, key) => {
 			const candidate = this.searchOne({ target, key });
@@ -75,6 +100,13 @@ class Accessor {
 		};
 	}
 
+	/**
+	 *  Obtain a function to handle the `set` proxy calls, keeps track of changes without immediately
+	 *  modifying the proxied object
+	 *
+	 * @return    {Function}  set
+	 * @memberof  Accessor
+	 */
 	setter() {
 		return (target, key, value) => {
 			const candidate = this.searchOne({ target, key });
@@ -87,6 +119,12 @@ class Accessor {
 		};
 	}
 
+	/**
+	 *  Obtain a handler object for use with a Proxy instance
+	 *
+	 * @readonly
+	 * @memberof  Accessor
+	 */
 	get handler() {
 		return {
 			getOwnPropertyDescriptor: this.descriptor(),
@@ -97,18 +135,33 @@ class Accessor {
 		};
 	}
 
-	get delegate() {
-		return storage.get(this).delegate;
-	}
-
+	/**
+	 *  Obtain all mutations
+	 *
+	 *  @readonly
+	 *  @memberof  Accessor
+	 */
 	get mutations() {
 		return storage.get(this).mutations;
 	}
 
+	/**
+	 *  Commit all changes to the proxied object
+	 *
+	 *  @memberof  Accessor
+	 */
 	commit() {
-		this.mutations.forEach((mut) => (mut.target[mut.key] = mut.value));
+		const { mutations } = this;
+
+		mutations.forEach((mut) => (mut.target[mut.key] = mut.value));
+		mutations.splice(0, mutations.length);
 	}
 
+	/**
+	 *  Remove all mutations
+	 *
+	 *  @memberof  Accessor
+	 */
 	rollback() {
 		const { mutations } = this;
 
