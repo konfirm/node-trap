@@ -1,15 +1,15 @@
 {
-  "name": "@konfirm/dummy",
+  "name": "@konfirm/trap",
   "version": "0.0.0",
-  "description": "Reflect changes to object properties without immediately modifying it",
-  "main": "source/dummy.js",
+  "description": "Provide traps for use as Proxy handler, allowing to keep track of changes and choose to commit or rollback changes",
+  "main": "source/trap.js",
   "scripts": {
     "test": "lab -clr",
     "test-coverage-html": "lab -clr html -o report.html"
   },
   "keywords": [
-    "dummy",
-    "mimic"
+    "proxy",
+    "trap"
   ],
   "author": "Rogier Spieker <rogier@konfirm.eu>",
   "license": "MIT",
