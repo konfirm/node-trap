@@ -43,21 +43,22 @@ console.log('bar' in affect);  //  false
 ## API
 Trap provides most of the Proxy handler methods which directly change object properties.
 
- method | purpose | implemented
---------|---------|-------------
- [`apply`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/apply) | traps method invocations | no
- [`construct`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/construct) | traps new instance creation | no
- [`defineProperty`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/defineProperty) | traps `Object.defineProperty` calls | yes
- [`deleteProperty`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/deleteProperty) | traps property deletion | yes
- [`get`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/get) | traps property value getting | yes
- [`getOwnProperty`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/getOwnProperty) | traps `Object.getOwnProperty` calls | yes
- [`getPrototypeOf`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/getPrototypeOf) | traps `Object.getPrototypeOf` calls | no
- [`has`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/has) | traps `<key> in <Object>` calls | yes
- [`isExtensible`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/isExtensible) | traps `Object.isExtensible` calls | no
- [`ownKeys`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/ownKeys) | traps `Object.keys` calls | yes
- [`preventExtension`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/preventExtension) | traps `Object.preventExtensions` calls | no
- [`set`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/set) | traps property value setting | yes
- [`setPrototypeOf`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/setPrototypeOf) | traps `Object.setPrototypeOf` calls | no
+### Implemented
+ [`defineProperty`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/defineProperty); traps `Object.defineProperty` calls
+ [`deleteProperty`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/deleteProperty); traps property deletion
+ [`get`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/get); traps property value getting
+ [`getOwnPropertyDescriptor`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/getOwnPropertyDescriptor); traps `Object.getOwnPropertyDescriptor` calls
+ [`has`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/has); traps `<key> in <Object>` calls
+ [`ownKeys`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/ownKeys); traps `Object.keys` calls
+ [`set`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/set); traps property value setting
+
+### Not implemented
+ [`apply`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/apply); traps method invocations
+ [`construct`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/construct); traps new instance creation
+ [`getPrototypeOf`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/getPrototypeOf); traps `Object.getPrototypeOf` calls
+ [`isExtensible`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/isExtensible); traps `Object.isExtensible` calls
+ [`preventExtensions`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/preventExtensions); traps `Object.preventExtensions` calls
+ [`setPrototypeOf`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/setPrototypeOf); traps `Object.setPrototypeOf` calls
 
 
 ## Licence
