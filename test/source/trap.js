@@ -7,6 +7,7 @@ describe('Trap', () => {
 	describe('new Trap instance', () => {
 		const trap = new Trap();
 		const implemented = [
+			'defineProperty',
 			'deleteProperty',
 			'get',
 			'getOwnPropertyDescriptor',
@@ -17,7 +18,6 @@ describe('Trap', () => {
 		const absent = [
 			'apply',
 			'construct',
-			'defineProperty',
 			'getPrototypeOf',
 			'isExtensible',
 			'preventExtensions',
@@ -267,5 +267,117 @@ describe('Trap', () => {
 		expect(affect).to.equal({ bbb: 'BBB', ccc: 'CCC' });
 
 		next();
+	});
+
+	describe('Redefine properties', () => {
+		const trap = new Trap();
+		const affect = { aaa: 'AAA' };
+
+		it('define properties', (next) => {
+			trap.defineProperty(affect, 'bbb', { value: 'BBB' });
+
+			expect(trap.mutations).to.be.length(1);
+
+			expect(trap.getOwnPropertyDescriptor(affect, 'bbb')).to.equal({
+				configurable: false,
+				enumerable: false,
+				writable: false,
+				value: 'BBB',
+			});
+			expect(Object.getOwnPropertyDescriptor(affect, 'bbb')).to.be.undefined();
+
+			trap.commit();
+
+			expect(Object.getOwnPropertyDescriptor(affect, 'bbb')).to.equal({
+				configurable: false,
+				enumerable: false,
+				writable: false,
+				value: 'BBB',
+			});
+			expect(affect.bbb).to.equal('BBB');
+
+			next();
+		});
+
+		it('added keys reflect different descriptors', (next) => {
+			trap.set(affect, 'ccc', 'CCC');
+
+			expect(trap.getOwnPropertyDescriptor(affect, 'ccc')).to.equal({
+				configurable: true,
+				enumerable: true,
+				writable: true,
+				value: 'CCC',
+			});
+			expect(Object.getOwnPropertyDescriptor(affect, 'ccc')).to.be.undefined();
+
+			trap.commit();
+
+			expect(Object.getOwnPropertyDescriptor(affect, 'ccc')).to.equal({
+				configurable: true,
+				enumerable: true,
+				writable: true,
+				value: 'CCC',
+			});
+			expect(affect.ccc).to.equal('CCC');
+
+			next();
+		});
+
+		it('handles complicated define, set, delete sequence', (next) => {
+			trap.set(affect, 'ddd', 'set');
+
+			expect(trap.ownKeys(affect)).to.contain('ddd');
+			expect(trap.getOwnPropertyDescriptor(affect, 'ddd')).to.equal({
+				configurable: true,
+				enumerable: true,
+				writable: true,
+				value: 'set',
+			});
+
+			trap.defineProperty(affect, 'ddd', {
+				value: 'defined',
+			});
+
+			expect(trap.ownKeys(affect)).to.contain('ddd');
+			expect(trap.getOwnPropertyDescriptor(affect, 'ddd')).to.equal({
+				configurable: false,
+				enumerable: true,
+				writable: false,
+				value: 'defined',
+			});
+
+			trap.deleteProperty(affect, 'ddd');
+			expect(trap.ownKeys(affect)).not.to.contain('ddd');
+
+			trap.defineProperty(affect, 'ddd', { value: 'restored' });
+			expect(trap.ownKeys(affect)).not.to.contain('ddd');
+			expect(trap.getOwnPropertyDescriptor(affect, 'ddd')).to.equal({
+				configurable: false,
+				enumerable: false,
+				writable: false,
+				value: 'restored',
+			});
+
+			trap.defineProperty(affect, 'ddd', { value: 'restored-enumerable', enumerable: true });
+			expect(trap.ownKeys(affect)).to.contain('ddd');
+			expect(trap.getOwnPropertyDescriptor(affect, 'ddd')).to.equal({
+				configurable: false,
+				enumerable: true,
+				writable: false,
+				value: 'restored-enumerable',
+			});
+
+			trap.set(affect, 'ddd', 'set');
+
+			expect(trap.ownKeys(affect)).to.contain('ddd');
+			expect(trap.getOwnPropertyDescriptor(affect, 'ddd')).to.equal({
+				configurable: false,
+				enumerable: true,
+				writable: false,
+				value: 'set',
+			});
+
+			next();
+		});
 	});
 });

@@ -1,5 +1,4 @@
-// const Mutation = require('./mutation');
-const { Mutation, Deletion } = require('./mutation');
+const { Mutation, Deletion, Property } = require('./mutation');
 
 const storage = new WeakMap();
 //  eslint-disable-next-line no-undefined
@@ -10,6 +9,22 @@ class Trap {
 		storage.set(this, { mutations: [] });
 	}
 
+	/**
+	 *  Trap `defineProperty` calls
+	 *
+	 *  @param     {Object}   target
+	 *  @param     {String}   key
+	 *  @param     {Object}   descriptor
+	 *  @return    {Boolean}  success
+	 *  @memberof  Trap
+	 */
+	defineProperty(target, key, descriptor) {
+		const enumerable = this.ownKeys(target).indexOf(key) >= 0;
+
+		this.mutations.push(new Property(target, key, Object.assign({ enumerable }, descriptor)));
+
+		return true;
+	}
 	/**
 	 *  Trap key deletions
 	 *
@@ -46,10 +61,16 @@ class Trap {
 		const descriptor = { configurable: true, enumerable: true, writable: true };
 
 		return this.search({ target, key })
-			.reduce(
-				(carry, mutation) => Object.assign(descriptor, { value: mutation.value }),
-				Object.getOwnPropertyDescriptor(target, key)
-			);
+			.reduce((carry, mutation) => {
+				if (mutation instanceof Deletion) {
+					return und;
+				}
+
+				return Object.assign(
+					carry || descriptor,
+					mutation instanceof Property ? mutation.descriptor : { value: mutation.value }
+				);
+			}, Object.getOwnPropertyDescriptor(target, key));
 	}
 
 	/**
@@ -71,8 +92,14 @@ class Trap {
 	 *  @memberof  Trap
 	 */
 	ownKeys(target) {
-		return Object.keys(target)
-			.concat(this.mutations.map((mut) => mut.key))
+		return this.mutations
+			.reduce((carry, mutation) => {
+				if (mutation instanceof Deletion || (mutation instanceof Property && !mutation.value.enumerable)) {
+					return carry.filter((key) => key !== mutation.key);
+				}
+
+				return carry.concat(mutation.key);
+			}, Object.keys(target))
 			.filter((key, index, all) => all.indexOf(key) === index);
 	}
 
@@ -114,6 +141,11 @@ class Trap {
 		return storage.get(this).mutations;
 	}
 
+	/**
+	 *  Apply all mutations and truncate them
+	 *
+	 *  @memberof Trap
+	 */
 	commit() {
 		const { mutations } = this;
 
@@ -121,6 +153,11 @@ class Trap {
 		mutations.length = 0;
 	}
 
+	/**
+	 *  Discard all mutations
+	 *
+	 *  @memberof Trap
+	 */
 	rollback() {
 		this.mutations.length = 0;
 	}
