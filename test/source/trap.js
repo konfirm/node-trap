@@ -1,6 +1,7 @@
 /* global source, describe, it, expect */
 
 const Trap = source('trap');
+const { Mutation } = source('mutation');
 
 describe('Trap', () => {
 	describe('new Trap instance', () => {
@@ -93,15 +94,10 @@ describe('Trap', () => {
 
 			const [ mutation ] = trap.mutations;
 
-			expect(mutation).to.contain('key');
-			expect(mutation).to.contain('value');
-			expect(mutation).to.contain('target');
-			expect(mutation).to.contain('type');
-
 			expect(mutation.key).to.equal('foo');
 			expect(mutation.value).to.equal('bar');
 			expect(mutation.target).to.shallow.equal(affect);
-			expect(mutation.type).to.equal('set');
+			expect(mutation).to.be.instanceOf(Mutation);
 			expect(Object.keys(affect)).to.equal([]);
 
 			next();

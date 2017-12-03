@@ -1,3 +1,6 @@
+// const Mutation = require('./mutation');
+const { Mutation, Deletion } = require('./mutation');
+
 const storage = new WeakMap();
 //  eslint-disable-next-line no-undefined
 const und = undefined;
@@ -16,7 +19,7 @@ class Trap {
 	 *  @memberof  Trap
 	 */
 	deleteProperty(target, key) {
-		this.mutations.push({ target, key, value: und, type: 'delete' });
+		this.mutations.push(new Deletion(target, key));
 	}
 
 	/**
@@ -58,7 +61,7 @@ class Trap {
 	 */
 	has(target, key) {
 		return this.search({ target, key })
-			.reduce((carry, mutation) => mutation.type !== 'delete', key in target);
+			.reduce((carry, mutation) => !(mutation instanceof Deletion), key in target);
 	}
 
 	/**
@@ -82,7 +85,7 @@ class Trap {
 	 *  @memberof  Trap
 	 */
 	set(target, key, value) {
-		this.mutations.push({ target, key, value, type: 'set' });
+		this.mutations.push(new Mutation(target, key, value));
 	}
 
 
@@ -90,16 +93,15 @@ class Trap {
 	 *  Search for mutations based on an object seek parameter, matches every
 	 *  mutation containing the exact key/value pairs provided
 	 *
-	 * @param    {Object}  seek
-	 * @return   {Array}   mutations
+	 * @param     {Object}  seek
+	 * @return    {Array}   mutations
 	 * @memberof  Accessor
 	 */
 	search(seek) {
-		const keys = Object.keys(seek);
-		const { length } = keys;
+		const map = new Map(Object.keys(seek).map((key) => [ key, seek[key] ]));
 
 		return this.mutations
-			.filter((item) => keys.filter((key) => key in item && item[key] === seek[key]).length === length);
+			.filter((mutation) => mutation.matches(map));
 	}
 
 	/**
@@ -115,18 +117,7 @@ class Trap {
 	commit() {
 		const { mutations } = this;
 
-		mutations.forEach((mutation) => {
-			switch (mutation.type) {
-			case 'delete':
-				delete mutation.target[mutation.key];
-				break;
-
-			case 'set':
-			default:
-				mutation.target[mutation.key] = mutation.value;
-				break;
-			}
-		});
+		mutations.forEach((mutation) => mutation.apply());
 		mutations.length = 0;
 	}
 
