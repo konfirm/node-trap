@@ -44,9 +44,17 @@ console.log('bar' in affect);  //  false
 
 
 ## API
+Trap allows to keep track of changes within proxied objects, and exposes two methods besides the implemented [trap functions](https://github.com/konfirm/node-trap#implementedtrapfunctions).
+
+### `commit`
+Apply all mutations (since creation or last `commit` or `rollback`) to the proxied object and reset the mutation list.
+
+### `rollback`
+Drop all mutations so these will never be applied to the proxied object.
+
+### Implemented Trap functions
 Trap provides most of the Proxy handler methods which directly change object properties.
 
-### Implemented
   - [`defineProperty`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/defineProperty); traps `Object.defineProperty` calls
   - [`deleteProperty`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/deleteProperty); traps property deletion
   - [`get`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/get); traps property value getting
@@ -55,7 +63,9 @@ Trap provides most of the Proxy handler methods which directly change object pro
   - [`ownKeys`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/ownKeys); traps `Object.keys` calls
   - [`set`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/set); traps property value setting
 
-### Not implemented
+### Trap functions not implemented
+The following functions are currently not implemented by the Trap module, if there is a need for them to be added, feel free to submit an issue or create a pull request.
+
   - [`apply`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/apply); traps method invocations
   - [`construct`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/construct); traps new instance creation
   - [`getPrototypeOf`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/getPrototypeOf); traps `Object.getPrototypeOf` calls
