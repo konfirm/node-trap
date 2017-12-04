@@ -106,13 +106,14 @@ class Trap {
 	/**
 	 *  Trap key value setting, registers value mutations
 	 *
-	 *  @param     {Object}  target
-	 *  @param     {String}  key
-	 *  @param     {any}     value
+	 *  @param     {Object}   target
+	 *  @param     {String}   key
+	 *  @param     {any}      value
+	 *  @return    {Boolean}  success
 	 *  @memberof  Trap
 	 */
 	set(target, key, value) {
-		this.mutations.push(new Mutation(target, key, value));
+		return Boolean(this.mutations.push(new Mutation(target, key, value)));
 	}
 
 

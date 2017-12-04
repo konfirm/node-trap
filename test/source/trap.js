@@ -62,7 +62,7 @@ describe('Trap', () => {
 			expect(trap.get(affect, 'bbb')).to.be.undefined();
 			expect(affect).not.to.contain('bbb');
 
-			trap.set(affect, 'bbb', 'added');
+			expect(trap.set(affect, 'bbb', 'added')).to.be.true();
 
 			expect(trap.has(affect, 'aaa')).to.be.true();
 			expect(trap.get(affect, 'aaa')).to.equal('aaa');
@@ -88,7 +88,7 @@ describe('Trap', () => {
 			expect(trap.mutations).to.be.an.array();
 			expect(trap.mutations).to.be.length(0);
 
-			trap.set(affect, 'foo', 'bar');
+			expect(trap.set(affect, 'foo', 'bar')).to.be.true();
 
 			expect(trap.mutations).to.be.length(1);
 
@@ -116,7 +116,7 @@ describe('Trap', () => {
 			expect(trap.mutations).to.be.an.array();
 			expect(trap.mutations).to.be.length(0);
 
-			trap.set(affect, 'hello', 'world');
+			expect(trap.set(affect, 'hello', 'world')).to.be.true();
 
 			const keys = trap.ownKeys(affect);
 
@@ -145,7 +145,7 @@ describe('Trap', () => {
 			const before = trap.getOwnPropertyDescriptor(affect, 'hello');
 			expect(before).to.be.undefined();
 
-			trap.set(affect, 'hello', 'world');
+			expect(trap.set(affect, 'hello', 'world')).to.be.true();
 
 			const after = trap.getOwnPropertyDescriptor(affect, 'hello');
 			expect(after).to.equal({ configurable: true, enumerable: true, writable: true, value: 'world' });
@@ -163,7 +163,7 @@ describe('Trap', () => {
 			expect(initial).to.be.an.array();
 			expect(initial).to.be.length(0);
 
-			trap.set(affect, 'foo', 'bar');
+			expect(trap.set(affect, 'foo', 'bar')).to.be.true();
 
 			const list = trap.search({ key: 'foo' });
 
@@ -300,7 +300,7 @@ describe('Trap', () => {
 		});
 
 		it('added keys reflect different descriptors', (next) => {
-			trap.set(affect, 'ccc', 'CCC');
+			expect(trap.set(affect, 'ccc', 'CCC')).to.be.true();
 
 			expect(trap.getOwnPropertyDescriptor(affect, 'ccc')).to.equal({
 				configurable: true,
@@ -324,7 +324,7 @@ describe('Trap', () => {
 		});
 
 		it('handles complicated define, set, delete sequence', (next) => {
-			trap.set(affect, 'ddd', 'set');
+			expect(trap.set(affect, 'ddd', 'set')).to.be.true();
 
 			expect(trap.ownKeys(affect)).to.contain('ddd');
 			expect(trap.getOwnPropertyDescriptor(affect, 'ddd')).to.equal({
@@ -367,7 +367,7 @@ describe('Trap', () => {
 				value: 'restored-enumerable',
 			});
 
-			trap.set(affect, 'ddd', 'set');
+			expect(trap.set(affect, 'ddd', 'set')).to.be.true();
 
 			expect(trap.ownKeys(affect)).to.contain('ddd');
 			expect(trap.getOwnPropertyDescriptor(affect, 'ddd')).to.equal({
