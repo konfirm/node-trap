@@ -25,6 +25,18 @@ describe('Mutations', () => {
 
 			next();
 		});
+
+		it('represents instances as string and JSON', (next) => {
+			const mutation = new Mutation({}, 'hello', 'world');
+
+			expect(String(mutation)).to.equal('mutation: hello = world');
+			expect(String(mutation)).to.equal(mutation.toString());
+
+			expect(JSON.stringify(mutation)).to.equal('{"name":"mutation","key":"hello","value":"world"}');
+			expect(mutation.toJSON()).to.equal({ name: 'mutation', key: 'hello', value: 'world' });
+
+			next();
+		});
 	});
 
 	describe('Deletion', () => {
@@ -41,6 +53,18 @@ describe('Mutations', () => {
 
 			next();
 		});
+
+		it('represents instances as string and JSON', (next) => {
+			const deletion = new Deletion({}, 'hello');
+
+			expect(String(deletion)).to.equal('deletion: hello');
+			expect(String(deletion)).to.equal(deletion.toString());
+
+			expect(JSON.stringify(deletion)).to.equal('{"name":"deletion","key":"hello"}');
+			expect(deletion.toJSON()).to.equal({ name: 'deletion', key: 'hello' });
+
+			next();
+		});
 	});
 
 	describe('Property', () => {
@@ -54,6 +78,18 @@ describe('Mutations', () => {
 			expect(deletion.key).to.be.undefined();
 			expect(deletion.value).to.be.undefined();
 			expect(deletion.matches(new Map())).to.be.true();
+
+			next();
+		});
+
+		it('represents instances as string and JSON', (next) => {
+			const property = new Property({}, 'hello', { value: 'world' });
+
+			expect(String(property)).to.equal('property: hello');
+			expect(String(property)).to.equal(property.toString());
+
+			expect(JSON.stringify(property)).to.equal('{"name":"property","key":"hello"}');
+			expect(property.toJSON()).to.equal({ name: 'property', key: 'hello' });
 
 			next();
 		});

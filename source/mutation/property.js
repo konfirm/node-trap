@@ -16,6 +16,12 @@ class Property extends Mutation {
 		Object.defineProperty(this.target, this.key, this.descriptor);
 	}
 
+	/**
+	 *  Create the full descriptor with defaults for the provided descriptor
+	 *
+	 *  @readonly
+	 *  @memberof  Property
+	 */
 	get descriptor() {
 		return Object.assign(
 			this.constructor.DEFAULT_DESCRIPTOR,
@@ -23,12 +29,40 @@ class Property extends Mutation {
 		);
 	}
 
+	/**
+	 *  Obtain the default descriptor settings, reflecting the default values
+	 *  used by defineProperty (which are different to the ones used by basic
+	 *  object properties)
+	 *
+	 *  @readonly
+	 *  @memberof  Property
+	 */
 	static get DEFAULT_DESCRIPTOR() {
 		return {
 			configurable: false,
 			enumerable: false,
 			writable: false,
 		};
+	}
+
+	/**
+	 *  Represent the mutation as a string
+	 *
+	 *  @return    {String}  mutation info
+	 *  @memberof  Mutation
+	 */
+	toString() {
+		return `${ this.name }: ${ this.key }`;
+	}
+
+	/**
+	 *  Represent the mutation as a JSONable object
+	 *
+	 *  @return    {Object}  JSONable mutation
+	 *  @memberof  Mutation
+	 */
+	toJSON() {
+		return { name: this.name, key: this.key };
 	}
 }
 

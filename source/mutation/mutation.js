@@ -94,6 +94,26 @@ class Mutation {
 
 		return map.get('value');
 	}
+
+	/**
+	 *  Represent the mutation as a string
+	 *
+	 *  @return    {String}  mutation info
+	 *  @memberof  Mutation
+	 */
+	toString() {
+		return `${ this.name }: ${ this.key } = ${ this.value }`;
+	}
+
+	/**
+	 *  Represent the mutation as a JSONable object
+	 *
+	 *  @return    {Object}  JSONable mutation
+	 *  @memberof  Mutation
+	 */
+	toJSON() {
+		return { name: this.name, key: this.key, value: this.value };
+	}
 }
 
 module.exports = Mutation;
