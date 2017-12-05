@@ -21,20 +21,19 @@ class Trap {
 	defineProperty(target, key, descriptor) {
 		const enumerable = this.ownKeys(target).indexOf(key) >= 0;
 
-		this.mutations.push(new Property(target, key, Object.assign({ enumerable }, descriptor)));
-
-		return true;
+		return Boolean(this.mutations.push(new Property(target, key, Object.assign({ enumerable }, descriptor))));
 	}
 	/**
 	 *  Trap key deletions
 	 *
-	 *  @param     {Object}  target
-	 *  @param     {String}  key
-	 *  @param     {Object}  descriptor
+	 *  @param     {Object}   target
+	 *  @param     {String}   key
+	 *  @param     {Object}   descriptor
+	 *  @return    {Boolean}  success
 	 *  @memberof  Trap
 	 */
 	deleteProperty(target, key) {
-		this.mutations.push(new Deletion(target, key));
+		return Boolean(this.mutations.push(new Deletion(target, key)));
 	}
 
 	/**
@@ -42,7 +41,7 @@ class Trap {
 	 *
 	 *  @param     {Object}  target
 	 *  @param     {String}  key
-	 *  @param     {Object}  descriptor
+	 *  @return    {any}     value
 	 *  @memberof  Trap
 	 */
 	get(target, key) {
@@ -55,6 +54,7 @@ class Trap {
 	 *
 	 *  @param     {Object}  target
 	 *  @param     {String}  key
+	 *  @return    {Object}  descriptor
 	 *  @memberof  Trap
 	 */
 	getOwnPropertyDescriptor(target, key) {
@@ -76,8 +76,9 @@ class Trap {
 	/**
 	 *  Trap `in` operations, considers mutations
 	 *
-	 *  @param     {Object}  target
-	 *  @param     {String}  key
+	 *  @param     {Object}   target
+	 *  @param     {String}   key
+	 *  @param     {Boolean}  has
 	 *  @memberof  Trap
 	 */
 	has(target, key) {
@@ -89,6 +90,7 @@ class Trap {
 	 *  Trap keys obtaining calls, considers mutations
 	 *
 	 *  @param     {Object}  target
+	 *  @return    {Array}   keys
 	 *  @memberof  Trap
 	 */
 	ownKeys(target) {

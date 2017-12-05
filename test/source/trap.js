@@ -73,7 +73,7 @@ describe('Trap', () => {
 			expect(affect.aaa).to.equal('aaa');
 			expect(affect).not.to.contain('bbb');
 
-			trap.deleteProperty(affect, 'aaa');
+			expect(trap.deleteProperty(affect, 'aaa')).to.be.true();
 			expect(trap.has(affect, 'aaa')).to.be.false();
 			expect(trap.get(affect, 'aaa')).to.be.undefined();
 			expect(trap.has(affect, 'bbb')).to.be.true();
@@ -203,7 +203,7 @@ describe('Trap', () => {
 		expect(trap.has(affect, 'ccc')).to.be.true();
 		expect(affect).to.equal({ aaa: 'AAA' });
 
-		trap.deleteProperty(affect, 'aaa');
+		expect(trap.deleteProperty(affect, 'aaa')).to.be.true();
 
 		expect(trap.mutations).to.be.length(3);
 		expect(trap.has(affect, 'aaa')).to.be.false();
@@ -248,7 +248,7 @@ describe('Trap', () => {
 		expect(trap.has(affect, 'ccc')).to.be.true();
 		expect(affect).to.equal({ aaa: 'AAA' });
 
-		trap.deleteProperty(affect, 'aaa');
+		expect(trap.deleteProperty(affect, 'aaa')).to.be.true();
 
 		expect(trap.mutations).to.be.length(3);
 		expect(trap.has(affect, 'aaa')).to.be.false();
@@ -274,7 +274,7 @@ describe('Trap', () => {
 		const affect = { aaa: 'AAA' };
 
 		it('define properties', (next) => {
-			trap.defineProperty(affect, 'bbb', { value: 'BBB' });
+			expect(trap.defineProperty(affect, 'bbb', { value: 'BBB' })).to.be.true();
 
 			expect(trap.mutations).to.be.length(1);
 
@@ -334,9 +334,9 @@ describe('Trap', () => {
 				value: 'set',
 			});
 
-			trap.defineProperty(affect, 'ddd', {
+			expect(trap.defineProperty(affect, 'ddd', {
 				value: 'defined',
-			});
+			})).to.be.true();
 
 			expect(trap.ownKeys(affect)).to.contain('ddd');
 			expect(trap.getOwnPropertyDescriptor(affect, 'ddd')).to.equal({
@@ -346,10 +346,10 @@ describe('Trap', () => {
 				value: 'defined',
 			});
 
-			trap.deleteProperty(affect, 'ddd');
+			expect(trap.deleteProperty(affect, 'ddd')).to.be.true();
 			expect(trap.ownKeys(affect)).not.to.contain('ddd');
 
-			trap.defineProperty(affect, 'ddd', { value: 'restored' });
+			expect(trap.defineProperty(affect, 'ddd', { value: 'restored' })).to.be.true();
 			expect(trap.ownKeys(affect)).not.to.contain('ddd');
 			expect(trap.getOwnPropertyDescriptor(affect, 'ddd')).to.equal({
 				configurable: false,
@@ -358,7 +358,7 @@ describe('Trap', () => {
 				value: 'restored',
 			});
 
-			trap.defineProperty(affect, 'ddd', { value: 'restored-enumerable', enumerable: true });
+			expect(trap.defineProperty(affect, 'ddd', { value: 'restored-enumerable', enumerable: true })).to.be.true();
 			expect(trap.ownKeys(affect)).to.contain('ddd');
 			expect(trap.getOwnPropertyDescriptor(affect, 'ddd')).to.equal({
 				configurable: false,
