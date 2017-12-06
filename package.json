@@ -4,8 +4,15 @@
   "description": "Provide traps for use as Proxy handler, allowing to keep track of changes and choose to commit or rollback changes",
   "main": "source/trap.js",
   "scripts": {
-    "test": "lab -clr",
+    "test": "lab -vclr",
     "test-coverage-html": "lab -clr html -o report.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/konfirm/node-trap.git"
+  },
+  "bugs": {
+    "url": "https://github.com/konfirm/node-trap/issues"
   },
   "keywords": [
     "proxy",
