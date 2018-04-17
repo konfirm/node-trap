@@ -25,8 +25,15 @@ class Property extends Mutation {
 	get descriptor() {
 		return Object.assign(
 			this.constructor.DEFAULT_DESCRIPTOR,
-			this.value
+			super.value
 		);
+	}
+
+	get value() {
+		const descriptor = super.value;
+		const { value, get } = descriptor || {};
+
+		return get ? get() : value;
 	}
 
 	/**

@@ -5,8 +5,8 @@ const storage = new WeakMap();
 const und = undefined;
 
 class Trap {
-	constructor() {
-		storage.set(this, { mutations: [] });
+	constructor(trackOnlyLastMutation = false) {
+		storage.set(this, { purge: trackOnlyLastMutation, mutations: [] });
 	}
 
 	/**
@@ -21,8 +21,11 @@ class Trap {
 	defineProperty(target, key, descriptor) {
 		const enumerable = this.ownKeys(target).indexOf(key) >= 0;
 
+		this.purge({ target, key });
+
 		return Boolean(this.mutations.push(new Property(target, key, Object.assign({ enumerable }, descriptor))));
 	}
+
 	/**
 	 *  Trap key deletions
 	 *
@@ -33,6 +36,16 @@ class Trap {
 	 *  @memberof  Trap
 	 */
 	deleteProperty(target, key) {
+		const { purge } = storage.get(this);
+
+		if (purge) {
+			this.purge({ target, key });
+
+			if (!Object.getOwnPropertyDescriptor(target, key)) {
+				return true;
+			}
+		}
+
 		return Boolean(this.mutations.push(new Deletion(target, key)));
 	}
 
@@ -96,7 +109,7 @@ class Trap {
 	ownKeys(target) {
 		return this.mutations
 			.reduce((carry, mutation) => {
-				if (mutation instanceof Deletion || (mutation instanceof Property && !mutation.value.enumerable)) {
+				if (mutation instanceof Deletion || (mutation instanceof Property && !mutation.descriptor.enumerable)) {
 					return carry.filter((key) => key !== mutation.key);
 				}
 
@@ -115,6 +128,16 @@ class Trap {
 	 *  @memberof  Trap
 	 */
 	set(target, key, value) {
+		const { purge } = storage.get(this);
+
+		if (purge) {
+			this.purge({ target, key });
+
+			if (key in target && target[key] === value) {
+				return true;
+			}
+		}
+
 		return Boolean(this.mutations.push(new Mutation(target, key, value)));
 	}
 
@@ -123,15 +146,35 @@ class Trap {
 	 *  Search for mutations based on an object seek parameter, matches every
 	 *  mutation containing the exact key/value pairs provided
 	 *
-	 * @param     {Object}  seek
-	 * @return    {Array}   mutations
-	 * @memberof  Accessor
+	 *  @param     {Object}  seek
+	 *  @return    {Array}   mutations
+	 *  @memberof  Trap
 	 */
 	search(seek) {
 		const map = new Map(Object.keys(seek).map((key) => [ key, seek[key] ]));
 
 		return this.mutations
 			.filter((mutation) => mutation.matches(map));
+	}
+
+	/**
+	 *  Purge all mutation matching the given seek parameter
+	 *
+	 *  @param {Object} seek
+	 *  @return   int number of purged items
+	 *  @memberof Trap
+	 */
+	purge(seek) {
+		const { purge } = storage.get(this);
+
+		if (purge) {
+			return this.search(seek)
+				.map((mutation) => this.mutations.indexOf(mutation))
+				.reduce((carry, index) => carry.concat(this.mutations.splice(index, 1)), [])
+				.length;
+		}
+
+		return 0;
 	}
 
 	/**
