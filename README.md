@@ -44,10 +44,13 @@ console.log('bar' in affect);  //  false
 
 
 ## API
-Trap allows to keep track of changes within proxied objects, and exposes two methods besides the implemented [trap functions](https://github.com/konfirm/node-trap#implementedtrapfunctions).
+Trap keeps track of changes within proxied objects, and exposes two methods besides the implemented [trap functions](https://github.com/konfirm/node-trap#implementedtrapfunctions).
+
+### `Trap([trackOnlyLastMutation])`
+The Trap constructor accepts the `(bool0ish) trackOnlyLastMutation` argument (default `undefined`) indicating whether or not the mutations should be limited to one per property. If `trackOnlyLastMutation` is set to a `true`-ish value, any previous change to the trapped object is remove before applying the next value. Should the next value effectively restore the original state, no new mutations is created and the number of mutations is decreased.
 
 ### `commit`
-Apply all mutations (since creation or last `commit` or `rollback`) to the proxied object and reset the mutation list.
+Apply all collected mutations to the proxied object and reset the mutation list.
 
 ### `rollback`
 Drop all mutations so these will never be applied to the proxied object.
