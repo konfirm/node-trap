@@ -48,6 +48,31 @@ describe('Trap', () => {
 		});
 	});
 
+	describe('Accesses actual values', () => {
+		const trap = new Trap();
+		const tests = [
+			true,
+			false,
+			null,
+			0,
+			1,
+			Infinity,
+			-Infinity,
+			'',
+		];
+
+		tests.forEach((test) => {
+			it(JSON.stringify(test), (next) => {
+				const target = { test };
+
+				expect(trap.has(target, 'test')).to.be.true();
+				expect(trap.get(target, 'test')).to.equal(test);
+
+				next();
+			});
+		});
+	});
+
 	describe('Simple state changes', () => {
 		it('tracks changes', (next) => {
 			const trap = new Trap();
