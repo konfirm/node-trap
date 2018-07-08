@@ -59,7 +59,7 @@ class Trap {
 	 */
 	get(target, key) {
 		return this.search({ target, key })
-			.reduce((carry, mutation) => mutation.value, target[key] || und);
+			.reduce((carry, mutation) => mutation.value, key in target ? target[key] : und);
 	}
 
 	/**
