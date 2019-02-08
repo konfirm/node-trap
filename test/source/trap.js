@@ -106,6 +106,68 @@ describe('Trap', () => {
 			next();
 		});
 
+		describe('mutation count', () => {
+			it('defaults to keep adding mutations', (next) => {
+				const trap = new Trap();
+				const affect = { foo: 'bar' };
+
+				expect(affect.foo).to.equal('bar');
+				expect(trap.mutations).to.be.length(0);
+
+				trap.set(affect, 'foo', 'baz');
+
+				expect(trap.get(affect, 'foo')).to.equal('baz');
+				expect(trap.mutations).to.be.length(1);
+
+				trap.set(affect, 'foo', 'bar');
+
+				expect(trap.get(affect, 'foo')).to.equal('bar');
+				expect(trap.mutations).to.be.length(2);
+
+				next()
+			});
+
+			it('keep adding mutations', (next) => {
+				const trap = new Trap(false);
+				const affect = { foo: 'bar' };
+
+				expect(affect.foo).to.equal('bar');
+				expect(trap.mutations).to.be.length(0);
+
+				trap.set(affect, 'foo', 'baz');
+
+				expect(trap.get(affect, 'foo')).to.equal('baz');
+				expect(trap.mutations).to.be.length(1);
+
+				trap.set(affect, 'foo', 'bar');
+
+				expect(trap.get(affect, 'foo')).to.equal('bar');
+				expect(trap.mutations).to.be.length(2);
+
+				next()
+			});
+
+			it('only track last (actual) muations', (next) => {
+				const trap = new Trap(true);
+				const affect = { foo: 'bar' };
+
+				expect(affect.foo).to.equal('bar');
+				expect(trap.mutations).to.be.length(0);
+
+				trap.set(affect, 'foo', 'baz');
+
+				expect(trap.get(affect, 'foo')).to.equal('baz');
+				expect(trap.mutations).to.be.length(1);
+
+				trap.set(affect, 'foo', 'bar');
+
+				expect(trap.get(affect, 'foo')).to.equal('bar');
+				expect(trap.mutations).to.be.length(0);
+
+				next()
+			});
+		});
+
 		it('mutations are reflected by the mutations property', (next) => {
 			const trap = new Trap();
 			const affect = {};
