@@ -1,4 +1,6 @@
-const { Mutation, Deletion, Property } = require('./mutation');
+const Value = require("../ValueObject/Mutation/Value.js");
+const Deletion = require("../ValueObject/Mutation/Deletion.js");
+const Property = require("../ValueObject/Mutation/Property.js");
 
 const storage = new WeakMap();
 //  eslint-disable-next-line no-undefined
@@ -23,7 +25,15 @@ class Trap {
 
 		this.purge({ target, key });
 
-		return Boolean(this.mutations.push(new Property(target, key, Object.assign({ enumerable }, descriptor))));
+		return Boolean(
+			this.mutations.push(
+				new Property(
+					target,
+					key,
+					Object.assign({ enumerable }, descriptor)
+				)
+			)
+		);
 	}
 
 	/**
@@ -58,8 +68,10 @@ class Trap {
 	 *  @memberof  Trap
 	 */
 	get(target, key) {
-		return this.search({ target, key })
-			.reduce((carry, mutation) => mutation.value, key in target ? target[key] : und);
+		return this.search({ target, key }).reduce(
+			(carry, mutation) => mutation.value,
+			key in target ? target[key] : und
+		);
 	}
 
 	/**
@@ -71,19 +83,24 @@ class Trap {
 	 *  @memberof  Trap
 	 */
 	getOwnPropertyDescriptor(target, key) {
-		const descriptor = { configurable: true, enumerable: true, writable: true };
+		const descriptor = {
+			configurable: true,
+			enumerable: true,
+			writable: true
+		};
 
-		return this.search({ target, key })
-			.reduce((carry, mutation) => {
-				if (mutation instanceof Deletion) {
-					return und;
-				}
+		return this.search({ target, key }).reduce((carry, mutation) => {
+			if (mutation instanceof Deletion) {
+				return und;
+			}
 
-				return Object.assign(
-					carry || descriptor,
-					mutation instanceof Property ? mutation.descriptor : { value: mutation.value }
-				);
-			}, Object.getOwnPropertyDescriptor(target, key));
+			return Object.assign(
+				carry || descriptor,
+				mutation instanceof Property
+					? mutation.descriptor
+					: { value: mutation.value }
+			);
+		}, Object.getOwnPropertyDescriptor(target, key));
 	}
 
 	/**
@@ -95,8 +112,10 @@ class Trap {
 	 *  @memberof  Trap
 	 */
 	has(target, key) {
-		return this.search({ target, key })
-			.reduce((carry, mutation) => !(mutation instanceof Deletion), key in target);
+		return this.search({ target, key }).reduce(
+			(carry, mutation) => !(mutation instanceof Deletion),
+			key in target
+		);
 	}
 
 	/**
@@ -109,8 +128,12 @@ class Trap {
 	ownKeys(target) {
 		return this.mutations
 			.reduce((carry, mutation) => {
-				if (mutation instanceof Deletion || (mutation instanceof Property && !mutation.descriptor.enumerable)) {
-					return carry.filter((key) => key !== mutation.key);
+				if (
+					mutation instanceof Deletion ||
+					(mutation instanceof Property &&
+						!mutation.descriptor.enumerable)
+				) {
+					return carry.filter(key => key !== mutation.key);
 				}
 
 				return carry.concat(mutation.key);
@@ -138,9 +161,8 @@ class Trap {
 			}
 		}
 
-		return Boolean(this.mutations.push(new Mutation(target, key, value)));
+		return Boolean(this.mutations.push(new Value(target, key, value)));
 	}
-
 
 	/**
 	 *  Search for mutations based on an object seek parameter, matches every
@@ -151,10 +173,9 @@ class Trap {
 	 *  @memberof  Trap
 	 */
 	search(seek) {
-		const map = new Map(Object.keys(seek).map((key) => [ key, seek[key] ]));
+		const map = new Map(Object.keys(seek).map(key => [key, seek[key]]));
 
-		return this.mutations
-			.filter((mutation) => mutation.matches(map));
+		return this.mutations.filter(mutation => mutation.matches(map));
 	}
 
 	/**
@@ -170,8 +191,11 @@ class Trap {
 		if (purge) {
 			return this.search(seek)
 				.map((mutation) => this.mutations.indexOf(mutation))
-				.reduce((carry, index) => carry.concat(this.mutations.splice(index, 1)), [])
-				.length;
+				.reduce(
+					(carry, index) =>
+						carry.concat(this.mutations.splice(index, 1)),
+					[]
+				).length;
 		}
 
 		return 0;
@@ -195,7 +219,7 @@ class Trap {
 	commit() {
 		const { mutations } = this;
 
-		mutations.forEach((mutation) => mutation.apply());
+		mutations.forEach(mutation => mutation.apply());
 		mutations.length = 0;
 	}
 
