@@ -1,3 +1,4 @@
+const MutationCollection = require('../Entity/MutationCollection.js');
 const Value = require("../ValueObject/Mutation/Value.js");
 const Deletion = require("../ValueObject/Mutation/Deletion.js");
 const Property = require("../ValueObject/Mutation/Property.js");
@@ -8,7 +9,7 @@ const und = undefined;
 
 class Trap {
 	constructor(trackOnlyLastMutation = false) {
-		storage.set(this, { purge: trackOnlyLastMutation, mutations: [] });
+		storage.set(this, { purge: trackOnlyLastMutation, mutations: new MutationCollection() });
 	}
 
 	/**
@@ -127,6 +128,7 @@ class Trap {
 	 */
 	ownKeys(target) {
 		return this.mutations
+			.search({ target })
 			.reduce((carry, mutation) => {
 				if (
 					mutation instanceof Deletion ||
@@ -173,9 +175,7 @@ class Trap {
 	 *  @memberof  Trap
 	 */
 	search(seek) {
-		const map = new Map(Object.keys(seek).map(key => [key, seek[key]]));
-
-		return this.mutations.filter(mutation => mutation.matches(map));
+		return this.mutations.search(seek);
 	}
 
 	/**
@@ -186,19 +186,9 @@ class Trap {
 	 *  @memberof Trap
 	 */
 	purge(seek) {
-		const { purge } = storage.get(this);
+		const { purge, mutations } = storage.get(this);
 
-		if (purge) {
-			return this.search(seek)
-				.map((mutation) => this.mutations.indexOf(mutation))
-				.reduce(
-					(carry, index) =>
-						carry.concat(this.mutations.splice(index, 1)),
-					[]
-				).length;
-		}
-
-		return 0;
+		return purge ? mutations.purge(seek) : 0;
 	}
 
 	/**
@@ -217,10 +207,7 @@ class Trap {
 	 *  @memberof Trap
 	 */
 	commit() {
-		const { mutations } = this;
-
-		mutations.forEach(mutation => mutation.apply());
-		mutations.length = 0;
+		this.mutations.flush((mutation) => mutation.apply());
 	}
 
 	/**
@@ -229,7 +216,7 @@ class Trap {
 	 *  @memberof Trap
 	 */
 	rollback() {
-		this.mutations.length = 0;
+		this.mutations.flush();
 	}
 }
 

@@ -1,8 +1,8 @@
 /* global source, describe, it, expect */
 
 const Trap = source("Domain/ValueObject/Trap");
-// const { Mutation } = source('mutation');
-const Mutation = source("Domain/ValueObject/Mutation/Value");
+const Value = source("Domain/ValueObject/Mutation/Value");
+const MutationCollection = source('Domain/Entity/MutationCollection');
 
 describe("Trap", () => {
 	describe("new Trap instance", () => {
@@ -163,7 +163,7 @@ describe("Trap", () => {
 			const trap = new Trap();
 			const affect = {};
 
-			expect(trap.mutations).to.be.an.array();
+			expect(trap.mutations).to.be.instanceOf(MutationCollection);
 			expect(trap.mutations).to.be.length(0);
 
 			expect(trap.set(affect, "foo", "bar")).to.be.true();
@@ -175,7 +175,7 @@ describe("Trap", () => {
 			expect(mutation.key).to.equal("foo");
 			expect(mutation.value).to.equal("bar");
 			expect(mutation.target).to.shallow.equal(affect);
-			expect(mutation).to.be.instanceOf(Mutation);
+			expect(mutation).to.be.instanceOf(Value);
 			expect(Object.keys(affect)).to.equal([]);
 
 			next();
@@ -191,7 +191,7 @@ describe("Trap", () => {
 			expect(initial).to.be.length(1);
 			expect(initial[0]).to.equal("aaa");
 
-			expect(trap.mutations).to.be.an.array();
+			expect(trap.mutations).to.be.instanceOf(MutationCollection);
 			expect(trap.mutations).to.be.length(0);
 
 			expect(trap.set(affect, "hello", "world")).to.be.true();
@@ -203,7 +203,7 @@ describe("Trap", () => {
 			expect(keys[0]).to.equal("aaa");
 			expect(keys[1]).to.equal("hello");
 
-			expect(trap.mutations).to.be.an.array();
+			expect(trap.mutations).to.be.instanceOf(MutationCollection);
 			expect(trap.mutations).to.be.length(1);
 			expect(Object.keys(affect)).to.be.length(1);
 
