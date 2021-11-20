@@ -1,4 +1,4 @@
-const AbstractMutation = require("../../Abstract/Mutation.js");
+import { AbstractMutation } from '../../Abstract/Mutation'
 
 /**
  *  A single mutation record, indication a key deletion
@@ -6,7 +6,7 @@ const AbstractMutation = require("../../Abstract/Mutation.js");
  *  @class    DeletionMutation
  *  @extends  {AbstractMutation}
  */
-class DeletionMutation extends AbstractMutation {
+export class DeletionMutation extends AbstractMutation {
 	/**
 	 *  Apply the mutation to the target, removing the key from the target
 	 *
@@ -16,5 +16,3 @@ class DeletionMutation extends AbstractMutation {
 		delete this.target[this.key];
 	}
 }
-
-module.exports = DeletionMutation;

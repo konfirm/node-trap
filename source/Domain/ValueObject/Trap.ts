@@ -1,13 +1,18 @@
-const MutationCollection = require('../Entity/MutationCollection.js');
-const Value = require("../ValueObject/Mutation/Value.js");
-const Deletion = require("../ValueObject/Mutation/Deletion.js");
-const Property = require("../ValueObject/Mutation/Property.js");
+// const MutationCollection = require('../Entity/MutationCollection.js');
+// const Value = require("../ValueObject/Mutation/Value.js");
+// const Deletion = require("../ValueObject/Mutation/Deletion.js");
+// const Property = require("../ValueObject/Mutation/Property.js");
+
+import { MutationCollection } from "../Entity/MutationCollection";
+import { DeletionMutation } from "./Mutation/Deletion";
+import { PropertyMutation } from "./Mutation/Property";
+import { ValueMutation } from "./Mutation/Value";
 
 const storage = new WeakMap();
 //  eslint-disable-next-line no-undefined
 const und = undefined;
 
-class Trap {
+export class Trap {
 	constructor(trackOnlyLastMutation = false) {
 		storage.set(this, { purge: trackOnlyLastMutation, mutations: new MutationCollection() });
 	}
@@ -28,7 +33,7 @@ class Trap {
 
 		return Boolean(
 			this.mutations.push(
-				new Property(
+				new PropertyMutation(
 					target,
 					key,
 					Object.assign({ enumerable }, descriptor)
@@ -57,7 +62,7 @@ class Trap {
 			}
 		}
 
-		return Boolean(this.mutations.push(new Deletion(target, key)));
+		return Boolean(this.mutations.push(new DeletionMutation(target, key)));
 	}
 
 	/**
@@ -91,13 +96,13 @@ class Trap {
 		};
 
 		return this.search({ target, key }).reduce((carry, mutation) => {
-			if (mutation instanceof Deletion) {
+			if (mutation instanceof DeletionMutation) {
 				return und;
 			}
 
 			return Object.assign(
 				carry || descriptor,
-				mutation instanceof Property
+				mutation instanceof PropertyMutation
 					? mutation.descriptor
 					: { value: mutation.value }
 			);
@@ -114,7 +119,7 @@ class Trap {
 	 */
 	has(target, key) {
 		return this.search({ target, key }).reduce(
-			(carry, mutation) => !(mutation instanceof Deletion),
+			(carry, mutation) => !(mutation instanceof DeletionMutation),
 			key in target
 		);
 	}
@@ -131,8 +136,8 @@ class Trap {
 			.search({ target })
 			.reduce((carry, mutation) => {
 				if (
-					mutation instanceof Deletion ||
-					(mutation instanceof Property &&
+					mutation instanceof DeletionMutation ||
+					(mutation instanceof PropertyMutation &&
 						!mutation.descriptor.enumerable)
 				) {
 					return carry.filter(key => key !== mutation.key);
@@ -163,7 +168,7 @@ class Trap {
 			}
 		}
 
-		return Boolean(this.mutations.push(new Value(target, key, value)));
+		return Boolean(this.mutations.push(new ValueMutation(target, key, value)));
 	}
 
 	/**
@@ -219,5 +224,3 @@ class Trap {
 		this.mutations.flush();
 	}
 }
-
-module.exports = Trap;

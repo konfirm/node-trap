@@ -1,9 +1,9 @@
-const AbstractMutation = require("../../Abstract/Mutation.js");
+import { AbstractMutation } from "../../Abstract/Mutation";
 
 /**
  *  A single mutation record, indication a value change
  */
-class ValueMutation extends AbstractMutation {
+export class ValueMutation extends AbstractMutation {
 	/**
 	 *  Apply the mutation to the target, changing the value for given key
 	 */
@@ -31,5 +31,3 @@ class ValueMutation extends AbstractMutation {
 		return { ...json, value };
 	}
 }
-
-module.exports = ValueMutation;

@@ -1,4 +1,4 @@
-const AbstractMutation = require("../../Abstract/Mutation.js");
+import { AbstractMutation } from "../../Abstract/Mutation";
 
 /**
  *  A single mutation record, indication a property (re)definition
@@ -6,7 +6,7 @@ const AbstractMutation = require("../../Abstract/Mutation.js");
  * @class    PropertyMutation
  * @extends  {AbstractMutation}
  */
-class PropertyMutation extends AbstractMutation {
+export class PropertyMutation extends AbstractMutation {
 	/**
 	 *  Apply the mutation to the target, (re)defining the key on the target
 	 *
@@ -54,5 +54,3 @@ class PropertyMutation extends AbstractMutation {
 		return get ? get() : value;
 	}
 }
-
-module.exports = PropertyMutation;
