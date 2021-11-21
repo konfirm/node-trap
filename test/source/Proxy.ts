@@ -7,23 +7,23 @@ import { Trap } from "../../source/Domain/ValueObject/Trap";
 	let count = 0;
 
 	test(`With Proxy - trackOnlyLastMutation ${trackOnlyLastMutation} tracks ${trackOnlyLastMutation ? "last mutation" : "all mutations"}`, (t) => {
-		t.notOk("foo" in proxy);
-		t.equal(proxy.foo, undefined);
-		t.equal(trap.mutations.length, count);
+		t.notOk("foo" in proxy, 'proxy does not contain foo');
+		t.equal(proxy.foo, undefined, 'proxy.foo is undefined');
+		t.equal(trap.mutations.length, count, `trap.mutations has length ${count}`);
 
 		proxy.foo = "bar";
 		count = 1;
 
-		t.ok("foo" in proxy);
-		t.equal(proxy.foo, "bar");
-		t.equal(trap.mutations.length, count);
+		t.ok("foo" in proxy, 'proxy contains foo');
+		t.equal(proxy.foo, "bar", 'proxy.foo is "bar"');
+		t.equal(trap.mutations.length, count, `trap.mutations has length ${count}`);
 
 		proxy.foo = "baz";
 		count += Number(!trackOnlyLastMutation);
 
-		t.ok("foo" in proxy);
-		t.equal(proxy.foo, "baz");
-		t.equal(trap.mutations.length, count);
+		t.ok("foo" in proxy, 'proxy contains foo');
+		t.equal(proxy.foo, "baz"), 'proxy.foo is "baz"';
+		t.equal(trap.mutations.length, count, `trap.mutations has length ${count}`);
 
 		t.end();
 	});
@@ -32,16 +32,16 @@ import { Trap } from "../../source/Domain/ValueObject/Trap";
 		delete proxy.foo;
 		count = trackOnlyLastMutation ? 0 : count + 1;
 
-		t.notOk("foo" in proxy);
-		t.equal(proxy.foo, undefined);
-		t.equal(trap.mutations.length, count);
+		t.notOk("foo" in proxy, 'proxy does not contain foo');
+		t.equal(proxy.foo, undefined, 'proxy.foo is undefined');
+		t.equal(trap.mutations.length, count, `trap.mutations has length ${count}`);
 
 		delete proxy.qux;
 		count = trackOnlyLastMutation ? 1 : count + 1;
 
-		t.notOk("qux" in proxy);
-		t.equal(proxy.qux, undefined);
-		t.equal(trap.mutations.length, count);
+		t.notOk("qux" in proxy, 'proxy does not contain qux');
+		t.equal(proxy.qux, undefined, 'proxy qux is undefined');
+		t.equal(trap.mutations.length, count, `trap.mutations has length ${count}`);
 
 		proxy.qux = true;
 		count = trackOnlyLastMutation ? 0 : count + 1;
@@ -53,16 +53,16 @@ import { Trap } from "../../source/Domain/ValueObject/Trap";
 		Object.defineProperty(proxy, "foo", { get: () => "getter" });
 		count += 1;
 
-		t.ok("foo" in proxy);
-		t.equal(proxy.foo, "getter");
-		t.equal(trap.mutations.length, count);
+		t.ok("foo" in proxy, 'proxy contains foo');
+		t.equal(proxy.foo, "getter", 'proxy.foo is "getter"');
+		t.equal(trap.mutations.length, count, `trap.mutations has length ${count}`);
 
 		Object.defineProperty(proxy, "qux", { value: "value" });
 		count += 1;
 
-		t.ok("qux" in proxy);
-		t.equal(proxy.qux, "value");
-		t.equal(trap.mutations.length, count);
+		t.ok("qux" in proxy, 'proxy contains "qux"');
+		t.equal(proxy.qux, "value", 'proxy.qux is "value"');
+		t.equal(trap.mutations.length, count, `trap.mutations has length ${count}`);
 
 		Object.defineProperty(proxy, "foo", {
 			get: () => "done",
@@ -70,9 +70,9 @@ import { Trap } from "../../source/Domain/ValueObject/Trap";
 		});
 		count += Number(!trackOnlyLastMutation);
 
-		t.ok("foo" in proxy);
-		t.equal(proxy.foo, "done");
-		t.equal(trap.mutations.length, count);
+		t.ok("foo" in proxy, 'proxy contains foo');
+		t.equal(proxy.foo, "done", 'proxy.foo is "done"');
+		t.equal(trap.mutations.length, count, `trap.mutations has length ${count}`);
 
 		t.end();
 	});
@@ -82,11 +82,11 @@ import { Trap } from "../../source/Domain/ValueObject/Trap";
 		proxy.qux = true;
 		count = trackOnlyLastMutation ? 0 : count + 2;
 
-		t.notOk("foo" in proxy);
-		t.ok("qux" in proxy);
-		t.equal(proxy.foo, undefined);
-		t.ok(proxy.qux);
-		t.equal(trap.mutations.length, count);
+		t.notOk("foo" in proxy, 'proxy does not contain foo');
+		t.ok("qux" in proxy, 'proxy contains qux');
+		t.equal(proxy.foo, undefined), 'proxy.foo is undefined';
+		t.equal(proxy.qux, true, 'proxy.qux is true');
+		t.equal(trap.mutations.length, count, `trap.mutations has length ${count}`);
 
 		t.end();
 	});

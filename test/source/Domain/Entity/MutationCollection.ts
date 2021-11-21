@@ -10,8 +10,8 @@ import { ValueMutation } from '../../../../source/Domain/ValueObject/Mutation/Va
 class Custom extends AbstractMutation { }
 
 test('Domain/Entity/MutationCollection - is an Array', (t) => {
-	t.ok(MutationCollection.prototype instanceof Array);
-	t.ok(new MutationCollection() instanceof Array);
+	t.ok(MutationCollection.prototype instanceof Array, 'MutationCollection.prototype is an Array');
+	t.ok(new MutationCollection() instanceof Array, 'MutationCollection instance is an Array');
 
 	t.end();
 });
@@ -37,7 +37,7 @@ test('Domain/Entity/MutationCollection - validation', (t) => {
 	`(({ type, value, validity }) => {
 		const valid = (validity === 'valid');
 
-		t.equal(MutationCollection.valid(value), valid, `MutationCollection.valid ${type} ${value} is ${validity}`);
+		t.equal(MutationCollection.valid(value), valid, `${type} ${value} is ${validity}`);
 		t.equal(instance.validate(value), valid, `instance.validate ${type} ${value} is ${validity}`);
 	});
 
@@ -45,7 +45,7 @@ test('Domain/Entity/MutationCollection - validation', (t) => {
 });
 
 test('Domain/Entity/MutationCollection - cannot be seeded with values', (t) => {
-	t.equal(new (MutationCollection as any)(0, 1, 2, 3).length, 0);
+	t.equal(new (MutationCollection as any)(0, 1, 2, 3).length, 0, 'has length 0');
 
 	t.end();
 });
@@ -56,9 +56,9 @@ test('Domain/Entity/MutationCollection - implements push', (t) => {
 	instance.push(new ValueMutation());
 	instance.push(new PropertyMutation(), new DeletionMutation());
 
-	t.throws(() => instance.push('nope'), InvalidTypeError);
-	t.throws(() => instance.push('nope', new ValueMutation()), InvalidTypeError);
-	t.equal(instance.length, 3);
+	t.throws(() => instance.push('nope'), InvalidTypeError, 'cannot push "nope"');
+	t.throws(() => instance.push('nope', new ValueMutation()), InvalidTypeError, 'cannot push "nope" along with a valid value');
+	t.equal(instance.length, 3, 'has length 3');
 
 	t.end();
 });
@@ -68,9 +68,9 @@ test('Domain/Entity/MutationCollection - implements unshift', (t) => {
 	instance.unshift(new ValueMutation());
 	instance.unshift(new PropertyMutation(), new DeletionMutation());
 
-	t.throws(() => instance.unshift('nope'), InvalidTypeError);
-	t.throws(() => instance.unshift('nope', new ValueMutation()), InvalidTypeError);
-	t.equal(instance.length, 3);
+	t.throws(() => instance.unshift('nope'), InvalidTypeError, 'cannot unshift "nope"');
+	t.throws(() => instance.unshift('nope', new ValueMutation()), InvalidTypeError, 'cannot unshift "nope" along with a valid value');
+	t.equal(instance.length, 3, 'has length 3');
 
 	t.end();
 });
@@ -80,9 +80,9 @@ test('Domain/Entity/MutationCollection - implements splice', (t) => {
 	instance.splice(0, 0, new ValueMutation());
 	instance.splice(1, 0, new PropertyMutation(), new DeletionMutation());
 
-	t.throws(() => instance.splice(0, 0, 'nope'), InvalidTypeError);
-	t.throws(() => instance.splice(0, 0, 'nope', new ValueMutation()), InvalidTypeError);
-	t.equal(instance.length, 3);
+	t.throws(() => instance.splice(0, 0, 'nope'), InvalidTypeError, 'cannot splice "nope" into the collection');
+	t.throws(() => instance.splice(0, 0, 'nope', new ValueMutation()), InvalidTypeError, 'cannot splice "nope" along with a valid value into the collection');
+	t.equal(instance.length, 3, 'has length 3');
 
 	t.end();
 });
@@ -98,24 +98,24 @@ test('Domain/Entity/MutationCollection - implements search', (t) => {
 		new ValueMutation(one, 'b', 'X')
 	);
 
-	t.equal(instance.length, 3);
+	t.equal(instance.length, 3, 'has length 3');
 
-	t.equal(instance.search({ target: one }).length, 2);
-	t.equal(instance.search({ target: two }).length, 1);
+	t.equal(instance.search({ target: one }).length, 2, 'finds {target: one} 2 times');
+	t.equal(instance.search({ target: two }).length, 1, 'finds {target: two} 1 time');
 
-	t.equal(instance.search({ key: 'a' }).length, 2);
-	t.equal(instance.search({ key: 'b' }).length, 1);
+	t.equal(instance.search({ key: 'a' }).length, 2, 'finds { key: "a" } 2 times');
+	t.equal(instance.search({ key: 'b' }).length, 1, 'finds { key: "b" } 1 time');
 
-	t.equal(instance.search({ value: 'X' }).length, 3);
-	t.equal(instance.search({ value: 'Y' }).length, 0);
+	t.equal(instance.search({ value: 'X' }).length, 3, 'finds { value: "X" } 3 times');
+	t.equal(instance.search({ value: 'Y' }).length, 0, 'finds { value: "Y" } 0 times');
 
-	t.equal(instance.search({ target: one, key: 'a' }).length, 1);
-	t.equal(instance.search({ target: one, key: 'b' }).length, 1);
-	t.equal(instance.search({ target: two, key: 'a' }).length, 1);
-	t.equal(instance.search({ target: two, key: 'b' }).length, 0);
+	t.equal(instance.search({ target: one, key: 'a' }).length, 1, 'finds { target: one, key: "a" } 1 time');
+	t.equal(instance.search({ target: one, key: 'b' }).length, 1, 'finds { target: one, key: "b" } 1 time');
+	t.equal(instance.search({ target: two, key: 'a' }).length, 1, 'finds { target: two, key: "a" } 1 time');
+	t.equal(instance.search({ target: two, key: 'b' }).length, 0, 'finds { target: two, key: "b" } 0 times');
 
-	t.equal(instance.search({ key: 'a', value: 'X' }).length, 2);
-	t.equal(instance.search({ key: 'b', value: 'X' }).length, 1);
+	t.equal(instance.search({ key: 'a', value: 'X' }).length, 2, 'finds { key: "a", value: "X" } 2 times');
+	t.equal(instance.search({ key: 'b', value: 'X' }).length, 1, 'finds { key: "b", value: "X" } 1 time');
 
 	t.end();
 });
@@ -131,9 +131,9 @@ test('Domain/Entity/MutationCollection - implements purge', (t) => {
 		new DeletionMutation(two, 'a'),
 	);
 
-	t.equal(instance.length, 3);
-	t.equal(instance.purge({ target: one, key: 'b' }), 1);
-	t.equal(instance.length, 2);
+	t.equal(instance.length, 3, 'has length 3');
+	t.equal(instance.purge({ target: one, key: 'b' }), 1, 'purge { target: one, key: "b" } removes 1 item');
+	t.equal(instance.length, 2, 'has length 2');
 
 	t.end();
 });
@@ -147,22 +147,23 @@ test('Domain/Entity/MutationCollection - implements flush', (t) => {
 		new PropertyMutation()
 	);
 
-	t.equal(instance.length, 3);
-	t.equal(typeof instance.flush(undefined), 'undefined');
-	t.equal(instance.length, 0);
+	t.equal(instance.length, 3, 'has length 3');
+	t.equal(instance.flush(undefined), undefined, 'flush(undefined) returns undefined');
+	t.equal(instance.length, 0, 'has length 0');
+
 	instance.push(
 		new ValueMutation(),
 		new DeletionMutation(),
 		new PropertyMutation()
 	);
 
-	t.equal(instance.length, 3);
+	t.equal(instance.length, 3, 'has length 3');
 	let count = 0;
-	t.equal(typeof instance.flush((mutation) => {
+	t.equal(instance.flush((mutation) => {
 		count += Number(mutation instanceof AbstractMutation);
-	}), 'undefined');
-	t.equal(instance.length, 0);
-	t.equal(count, 3);
+	}), undefined, 'flush(function...) returns undefined');
+	t.equal(instance.length, 0, 'has length 0');
+	t.equal(count, 3, 'passed 3 checks to determine flushable state');
 
 	t.end();
 });

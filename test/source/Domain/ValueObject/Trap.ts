@@ -26,11 +26,11 @@ test('Domain/ValueObject/Trap - instance', (t) => {
 	t.ok(trap instanceof Trap);
 
 	implemented.forEach(method => {
-		t.equal(typeof trap[method], 'function');
+		t.equal(typeof trap[method], 'function', `implements ${method} function`);
 	});
 
 	absent.forEach(method => {
-		t.equal(typeof trap[method], 'undefined');
+		t.equal(typeof trap[method], 'undefined', `does not implement ${method} function`);
 	});
 
 	t.end();
@@ -40,11 +40,11 @@ test('Domain/ValueObject/Trap - Accesses actual values', (t) => {
 	const trap = new Trap();
 	const tests = [true, false, null, 0, 1, Infinity, -Infinity, ""];
 
-	tests.forEach(test => {
+	tests.forEach((test) => {
 		const target = { test };
 
-		t.ok(trap.has(target, "test"));
-		t.equal(trap.get(target, "test"), test);
+		t.ok(trap.has(target, "test"), 'target contains test');
+		t.equal(trap.get(target, "test"), test, `target.test is ${test}`);
 	});
 
 	t.end();
@@ -54,31 +54,31 @@ test('Domain/ValueObject/Trap - Simple state changes', (t) => {
 	const trap = new Trap();
 	const affect = { aaa: "aaa" };
 
-	t.ok(trap.has(affect, "aaa"));
-	t.equal(trap.get(affect, "aaa"), "aaa");
-	t.ok("aaa" in affect);
-	t.equal(affect.aaa, "aaa");
+	t.ok(trap.has(affect, "aaa"), 'target contains aaa');
+	t.equal(trap.get(affect, "aaa"), "aaa", 'target.aaa is "aaa"');
+	t.ok("aaa" in affect, 'affect contains "aaa"');
+	t.equal(affect.aaa, "aaa", 'affect.aaa is "aaa"');
 
-	t.notOk(trap.has(affect, "bbb"));
-	t.equal(trap.get(affect, "bbb"), undefined);
-	t.notOk("bbb" in affect);
+	t.notOk(trap.has(affect, "bbb"), 'trap.has(affect, "bbb") is false');
+	t.equal(trap.get(affect, "bbb"), undefined, 'trap.get(affect, "bbb") is undefined');
+	t.notOk("bbb" in affect, 'affect does not contain bbb');
 
-	t.ok(trap.set(affect, "bbb", "added"));
+	t.ok(trap.set(affect, "bbb", "added"), 'trap.set(affect, "bbb", "added" returns true');
 
-	t.ok(trap.has(affect, "aaa"));
-	t.equal(trap.get(affect, "aaa"), "aaa");
-	t.ok(trap.has(affect, "bbb"));
-	t.equal(trap.get(affect, "bbb"), "added");
+	t.ok(trap.has(affect, "aaa"), `trap.has(affect, "aaa") is true`);
+	t.equal(trap.get(affect, "aaa"), "aaa", `trap.get(affect, "aaa") is "aaa"`);
+	t.ok(trap.has(affect, "bbb"), `trap.has(affect, "bbb") is true`);
+	t.equal(trap.get(affect, "bbb"), "added", `trap.get(affect, "bbb") is "added"`);
 
-	t.ok("aaa" in affect);
-	t.equal(affect.aaa, "aaa");
-	t.notOk("bbb" in affect);
+	t.ok("aaa" in affect, `affect contains "aaa"`);
+	t.equal(affect.aaa, "aaa", 'affect.aaa is "aaa"');
+	t.notOk("bbb" in affect, `affect does not contain bbb`);
 
-	t.ok(trap.deleteProperty(affect, "aaa"));
-	t.notOk(trap.has(affect, "aaa"));
-	t.equal(trap.get(affect, "aaa"), undefined);
-	t.ok(trap.has(affect, "bbb"));
-	t.equal(trap.get(affect, "bbb"), "added");
+	t.ok(trap.deleteProperty(affect, "aaa"), `trap.deleteProperty(affect, "aaa") is true`);
+	t.notOk(trap.has(affect, "aaa"), `trap.has(affect, "aaa") is false`);
+	t.equal(trap.get(affect, "aaa"), undefined, `trap.get(affect, "aaa") is undefined`);
+	t.ok(trap.has(affect, "bbb"), `trap.has(affect, "bbb") is true`);
+	t.equal(trap.get(affect, "bbb"), "added", `trap.get(affect, "bbb") is "added"`);
 
 	t.end();
 });
@@ -87,17 +87,17 @@ test('Domain/ValueObject/Trap - add mutations (default)', (t) => {
 	const trap = new Trap();
 	const affect = { foo: "bar" };
 
-	t.equal(affect.foo, "bar");
-	t.equal(trap.mutations.length, 0);
+	t.equal(affect.foo, "bar", 'affect.foo is "bar"');
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 
 	trap.set(affect, "foo", "baz");
 
-	t.equal(trap.get(affect, "foo"), "baz");
-	t.equal(trap.mutations.length, 1);
+	t.equal(trap.get(affect, "foo"), "baz", 'trap.get(affect, "foo") is "foo"');
+	t.equal(trap.mutations.length, 1, 'has 1 mutation');
 
 	trap.set(affect, "foo", "bar");
 
-	t.equal(trap.get(affect, "foo"), "bar");
+	t.equal(trap.get(affect, "foo"), "bar", 'trap.get(affect, "foo") is "bar"');
 	t.equal(trap.mutations.length, 2);
 
 	t.end();
@@ -107,18 +107,18 @@ test('Domain/ValueObject/Trap - add mutations (explicit)', (t) => {
 	const trap = new Trap(false);
 	const affect = { foo: "bar" };
 
-	t.equal(affect.foo, "bar");
-	t.equal(trap.mutations.length, 0);
+	t.equal(affect.foo, "bar", 'affect.foo is "bar"');
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 
 	trap.set(affect, "foo", "baz");
 
-	t.equal(trap.get(affect, "foo"), "baz");
-	t.equal(trap.mutations.length, 1);
+	t.equal(trap.get(affect, "foo"), "baz", 'trap.get(affect, "foo") is "baz"');
+	t.equal(trap.mutations.length, 1, 'has 1 mutation');
 
 	trap.set(affect, "foo", "bar");
 
-	t.equal(trap.get(affect, "foo"), "bar");
-	t.equal(trap.mutations.length, 2);
+	t.equal(trap.get(affect, "foo"), "bar", 'trap.get(affect, "foo") is "bar"');
+	t.equal(trap.mutations.length, 2, 'has 2 mutations');
 
 	t.end();
 });
@@ -127,18 +127,18 @@ test('Domain/ValueObject/Trap - only last mutations', (t) => {
 	const trap = new Trap(true);
 	const affect = { foo: "bar" };
 
-	t.equal(affect.foo, "bar");
-	t.equal(trap.mutations.length, 0);
+	t.equal(affect.foo, "bar", 'affect.foo is "bar"');
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 
 	trap.set(affect, "foo", "baz");
 
-	t.equal(trap.get(affect, "foo"), "baz");
-	t.equal(trap.mutations.length, 1);
+	t.equal(trap.get(affect, "foo"), "baz", 'trap.get(affect, "foo") is "baz"');
+	t.equal(trap.mutations.length, 1, 'has 1 mutation');
 
 	trap.set(affect, "foo", "bar");
 
-	t.equal(trap.get(affect, "foo"), "bar");
-	t.equal(trap.mutations.length, 0);
+	t.equal(trap.get(affect, "foo"), "bar", 'trap.get(affect, "foo") is "bar"');
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 
 	t.end();
 });
@@ -148,19 +148,19 @@ test('Domain/ValueObject/Trap - mutations are reflected by the mutations propert
 	const affect = {};
 
 	t.ok(trap.mutations instanceof MutationCollection);
-	t.equal(trap.mutations.length, 0);
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 
-	t.ok(trap.set(affect, "foo", "bar"));
+	t.ok(trap.set(affect, "foo", "bar"), 'trap.set(affect, "foo", "bar") is true');
 
-	t.equal(trap.mutations.length, 1);
+	t.equal(trap.mutations.length, 1, 'has 1 mutation');
 
 	const [mutation] = trap.mutations;
 
-	t.equal(mutation.key, "foo");
-	t.equal(mutation.value, "bar");
-	t.equal(mutation.target, affect);
-	t.ok(mutation instanceof ValueMutation);
-	t.deepEqual(Object.keys(affect), []);
+	t.equal(mutation.key, "foo", 'mutation.key is "foo"');
+	t.equal(mutation.value, "bar", 'mutation.value is "bar"');
+	t.equal(mutation.target, affect, 'mutation.target is affect');
+	t.ok(mutation instanceof ValueMutation, 'mutation is an instance of ValueMutation');
+	t.deepEqual(Object.keys(affect), [], 'affect has no keys');
 
 	t.end();
 });
@@ -176,7 +176,7 @@ test('Domain/ValueObject/Trap - provides all available keys', (t) => {
 	t.equal(initial[0], "aaa");
 
 	t.ok(trap.mutations instanceof MutationCollection);
-	t.equal(trap.mutations.length, 0);
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 
 	t.ok(trap.set(affect, "hello", "world"));
 
@@ -188,7 +188,7 @@ test('Domain/ValueObject/Trap - provides all available keys', (t) => {
 	t.equal(keys[1], "hello");
 
 	t.ok(trap.mutations instanceof MutationCollection);
-	t.equal(trap.mutations.length, 1);
+	t.equal(trap.mutations.length, 1, 'has 1 mutation');
 	t.equal(Object.keys(affect).length, 1);
 
 	t.end();
@@ -240,7 +240,7 @@ test('Domain/ValueObject/Trap - it searches for mutations', (t) => {
 	t.ok(Array.isArray(initial));
 	t.equal(initial.length, 0);
 
-	t.ok(trap.set(affect, "foo", "bar"));
+	t.ok(trap.set(affect, "foo", "bar"), 'trap.set(affect, "foo", "bar") is true');
 
 	const list = trap.search({ key: "foo" });
 
@@ -259,14 +259,14 @@ test('Domain/ValueObject/Trap - rolls back mutations', (t) => {
 	const trap = new Trap();
 	const affect = { aaa: "AAA" };
 
-	t.equal(trap.mutations.length, 0);
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 	t.ok(trap.has(affect, "aaa"));
 	t.notOk(trap.has(affect, "bbb"));
 	t.deepEqual(affect, { aaa: "AAA" });
 
 	trap.set(affect, "bbb", "BBB");
 
-	t.equal(trap.mutations.length, 1);
+	t.equal(trap.mutations.length, 1, 'has 1 mutation');
 	t.ok(trap.has(affect, "aaa"));
 	t.ok(trap.has(affect, "bbb"));
 	t.deepEqual(affect, { aaa: "AAA" });
@@ -289,12 +289,12 @@ test('Domain/ValueObject/Trap - rolls back mutations', (t) => {
 
 	trap.rollback();
 
-	t.equal(trap.mutations.length, 0);
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 	t.deepEqual(affect, { aaa: "AAA" });
 
 	trap.commit();
 
-	t.equal(trap.mutations.length, 0);
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 	t.deepEqual(affect, { aaa: "AAA" });
 
 	t.end();
@@ -304,14 +304,14 @@ test('Domain/ValueObject/Trap - commits mutations', (t) => {
 	const trap = new Trap();
 	const affect = { aaa: "AAA" };
 
-	t.equal(trap.mutations.length, 0);
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 	t.ok(trap.has(affect, "aaa"));
 	t.notOk(trap.has(affect, "bbb"));
 	t.deepEqual(affect, { aaa: "AAA" });
 
 	trap.set(affect, "bbb", "BBB");
 
-	t.equal(trap.mutations.length, 1);
+	t.equal(trap.mutations.length, 1, 'has 1 mutation');
 	t.ok(trap.has(affect, "aaa"));
 	t.ok(trap.has(affect, "bbb"));
 	t.deepEqual(affect, { aaa: "AAA" });
@@ -334,12 +334,12 @@ test('Domain/ValueObject/Trap - commits mutations', (t) => {
 
 	trap.commit();
 
-	t.equal(trap.mutations.length, 0);
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 	t.deepEqual(affect, { bbb: "BBB", ccc: "CCC" });
 
 	trap.rollback();
 
-	t.equal(trap.mutations.length, 0);
+	t.equal(trap.mutations.length, 0, 'has 0 mutations');
 	t.deepEqual(affect, { bbb: "BBB", ccc: "CCC" });
 
 	t.end();
@@ -351,7 +351,7 @@ test('Domain/ValueObject/Trap - redefines properties', (t) => {
 
 	t.ok(trap.defineProperty(affect, "bbb", { value: "BBB" }));
 
-	t.equal(trap.mutations.length, 1);
+	t.equal(trap.mutations.length, 1, 'has 1 mutation');
 
 	t.deepEqual(trap.getOwnPropertyDescriptor(affect, "bbb"), {
 		configurable: false,

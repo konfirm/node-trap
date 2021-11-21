@@ -1,8 +1,3 @@
-// const MutationCollection = require('../Entity/MutationCollection.js');
-// const Value = require("../ValueObject/Mutation/Value.js");
-// const Deletion = require("../ValueObject/Mutation/Deletion.js");
-// const Property = require("../ValueObject/Mutation/Property.js");
-
 import { MutationCollection } from "../Entity/MutationCollection";
 import { DeletionMutation } from "./Mutation/Deletion";
 import { PropertyMutation } from "./Mutation/Property";
@@ -13,7 +8,7 @@ const storage = new WeakMap();
 const und = undefined;
 
 export class Trap {
-	constructor(trackOnlyLastMutation = false) {
+	constructor(trackOnlyLastMutation: boolean = false) {
 		storage.set(this, { purge: trackOnlyLastMutation, mutations: new MutationCollection() });
 	}
 
