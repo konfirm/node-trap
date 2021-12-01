@@ -30,6 +30,7 @@ function runner(call: (trap: Export.Trap, description: string) => void): Array<C
 		{ description: 'new Trap()', trap: new Trap() },
 		{ description: 'new Trap(true)', trap: new Trap(true) },
 	];
+
 	return traps.map(({ trap, description }) => {
 		call(trap, description);
 
@@ -129,10 +130,7 @@ test('Domain/Entity/Trap - has', (t) => {
 		t.equal(trap.has(target, 'sample'), false, `${name}: does not have property sample`);
 
 		trap.defineProperty(target, 'sample', { value: 'defined' });
-		t.equal(trap.has(target, 'sample'), false, `${name}: does not have property sample after defineProperty`);
-
-		trap.defineProperty(target, 'sample', { value: 'defined', enumerable: true });
-		t.equal(trap.has(target, 'sample'), true, `${name}: has property sample after defineProperty with enumrable true`);
+		t.equal(trap.has(target, 'sample'), true, `${name}: has property sample after defineProperty`);
 
 		trap.deleteProperty(target, 'sample');
 		t.equal(trap.has(target, 'sample'), false, `${name}: does not have property sample after deleteProperty`);
@@ -145,7 +143,7 @@ test('Domain/Entity/Trap - has', (t) => {
 
 	});
 
-	t.equal(all.findAll({ target }).length, 5, 'new Trap(): has 5 operations');
+	t.equal(all.findAll({ target }).length, 4, 'new Trap(): has 4 operations');
 	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operations');
 
 	t.end();

@@ -60,7 +60,7 @@ export class Trap<T extends object = object, O extends MutationOptions<T> = Muta
 
 	has(target: T, key: string | symbol): boolean {
 		return this.mutations.findAll({ target, key })
-			.reduce((_, mutation) => mutation.visible, key in target);
+			.reduce((_, mutation) => !(mutation instanceof DeletionMutation), key in target);
 	}
 
 	ownKeys(target: T): ArrayLike<string | symbol> {
