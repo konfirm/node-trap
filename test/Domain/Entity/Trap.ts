@@ -108,7 +108,6 @@ test('Domain/Entity/Trap - getOwnPropertyDescriptor', (t) => {
 		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), undefined, `${name}: property descriptor is undefined`);
 
 		trap.defineProperty(target, 'sample', undefined);
-		console.log(trap.getOwnPropertyDescriptor(target, 'sample'));
 		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), undefined, `${name}: property descriptor is undefined`);
 
 		trap.defineProperty(target, 'sample', { value: 'defined' });
