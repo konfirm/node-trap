@@ -24,6 +24,7 @@ test('Domain/Contract/MutationOptions - isMutationOptions', (t) => {
 		{ target: {} },
 		{ target: {}, key: 123 },
 		{ target: [], key: 'key' },
+		{ target: [], key: 'key', extra: false },
 	];
 	invalid.forEach((value) => {
 		t.notOk(isMutationOptions(value), `${JSON.stringify(value)} is not MutationOptions`);
@@ -34,6 +35,10 @@ test('Domain/Contract/MutationOptions - isMutationOptions', (t) => {
 		{ target: () => { }, key: 'key' },
 		{ target: {}, key: Symbol('key') },
 		{ target: () => { }, key: Symbol('key') },
+		{ target: {}, key: 'key', value: null },
+		{ target: () => { }, key: 'key', value: null },
+		{ target: {}, key: Symbol('key'), value: null },
+		{ target: () => { }, key: Symbol('key'), value: null },
 	];
 	valid.forEach((value) => {
 		t.ok(isMutationOptions(value), `${JSON.stringify(value)} is MutationOptions`);

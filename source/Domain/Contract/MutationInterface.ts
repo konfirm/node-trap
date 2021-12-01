@@ -1,5 +1,5 @@
 import { Descriptor, isDescriptor } from "@konfirm/descriptor";
-import { any, isBoolean, isFunction, isObject, isString, isStructure, isSymbol, isUndefined } from "@konfirm/guard";
+import { any, isBoolean, isFunction, isObject, isStrictStructure, isString, isSymbol, isUndefined } from "@konfirm/guard";
 import type { MutationOptions } from "./MutationOptions";
 
 /**
@@ -19,7 +19,7 @@ export interface MutationInterface<T extends MutationOptions = MutationOptions> 
 	apply(): void;
 }
 
-export const isMutationInterface = isStructure<MutationInterface>(
+export const isMutationInterface = isStrictStructure<MutationInterface>(
 	{
 		name: isString,
 		target: any(isObject, isFunction),

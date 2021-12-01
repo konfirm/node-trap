@@ -30,6 +30,7 @@ test('Domain/Contract/MutationInterface - isMutationInterface', (t) => {
 		{ name: 'name', target: {}, key: 123, descriptor: undefined, apply: () => { } },
 		{ name: 'name', target: {}, key: 'key', descriptor: 123, apply: () => { } },
 		{ name: 'name', target: {}, key: 'key', descriptor: undefined, apply: null },
+		{ name: 'name', target: {}, key: 'key', descriptor: undefined, apply: () => { }, extra: false },
 	];
 	invalid.forEach((value) => {
 		t.notOk(isMutationInterface(value), `${JSON.stringify(value)} is not a MutationInterface`);
