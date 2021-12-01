@@ -1,5 +1,4 @@
 import test from 'tape';
-import each from 'template-literal-each';
 import * as Export from '../../../source/Domain/Entity/Trap';
 import { Collection } from '../../../source/Domain/Entity/Collection';
 
