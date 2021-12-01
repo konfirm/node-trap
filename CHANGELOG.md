@@ -9,11 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Added
+- `Trap.commit` and `Trap.rollback` now support an optional search argument to select a subset of mutations to be committed or rolled back.
 
 ### Changed
 - Migration to Typescript
+- **BREAKING** There is no more default export
 
 ### Removed
+- **BREAKING** The Trap no longer exposes the collected mutations, this was introduced mainly to make unit testing possible and was no longer needed
 
 
 ## [1.2.7] - 2020-01-16
