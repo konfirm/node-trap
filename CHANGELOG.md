@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `Trap.commit` and `Trap.rollback` now support an optional search argument to select a subset of mutations to be committed or rolled back.
+- Support for IIFE, CJS, ESM and TypeScript
 
 ### Changed
 - Migration to Typescript
