@@ -1,4 +1,4 @@
-import { any, isObject, isString, isStructure, isSymbol } from "@konfirm/guard"
+import { any, isFunction, isObject, isString, isStructure, isSymbol } from "@konfirm/guard"
 
 export type MutationOptions<T extends object = object> = {
 	target: T;
@@ -7,6 +7,6 @@ export type MutationOptions<T extends object = object> = {
 }
 
 export const isMutationOptions = isStructure<MutationOptions>({
-	target: isObject,
+	target: any(isObject, isFunction),
 	key: any(isString, isSymbol),
 });
