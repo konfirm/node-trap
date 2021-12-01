@@ -15,7 +15,6 @@ export interface MutationInterface<T extends MutationOptions = MutationOptions> 
 	readonly key: T['key'];
 	readonly value: T['value'];
 	readonly descriptor: Descriptor | undefined;
-	readonly visible: boolean;
 
 	apply(): void;
 }
@@ -28,7 +27,6 @@ export const isMutationInterface = isStructure<MutationInterface>(
 		value: () => true,
 		descriptor: any(isUndefined, isDescriptor),
 		apply: isFunction,
-		visible: isBoolean,
 	},
 	['value']
 );

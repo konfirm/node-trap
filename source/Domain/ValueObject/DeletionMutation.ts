@@ -33,17 +33,6 @@ export class DeletionMutation<T extends MutationOptions = MutationOptions> exten
 	}
 
 	/**
-	 * The (property) visibility
-	 *
-	 * @readonly
-	 * @type {boolean}
-	 * @memberof AbstractMutation
-	 */
-	get visible(): boolean {
-		return false;
-	}
-
-	/**
 	 * apply the property mutation to the target
 	 *
 	 * @memberof DeletionMutation

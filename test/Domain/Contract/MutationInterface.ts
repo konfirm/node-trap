@@ -20,32 +20,30 @@ const { isMutationInterface } = Export;
 test('Domain/Contract/MutationInterface - isMutationInterface', (t) => {
 	const invalid = [
 		{},
-		{ target: {}, key: 'key', descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', key: 'key', descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', target: {}, descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', target: {}, key: 'key', apply: () => { }, visible: true },
-		{ name: 'name', target: {}, key: 'key', descriptor: undefined, visible: true },
-		{ name: 'name', target: {}, key: 'key', descriptor: undefined, apply: () => { } },
-		{ name: 123, target: {}, key: 'key', descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', target: [], key: 'key', descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', target: {}, key: 123, descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', target: {}, key: 'key', descriptor: 123, apply: () => { }, visible: true },
-		{ name: 'name', target: {}, key: 'key', descriptor: undefined, apply: null, visible: true },
-		{ name: 'name', target: {}, key: 'key', descriptor: undefined, apply: () => { }, visible: null },
+		{ target: {}, key: 'key', descriptor: undefined, apply: () => { } },
+		{ name: 'name', key: 'key', descriptor: undefined, apply: () => { } },
+		{ name: 'name', target: {}, descriptor: undefined, apply: () => { } },
+		{ name: 'name', target: {}, key: 'key', apply: () => { } },
+		{ name: 'name', target: {}, key: 'key', descriptor: undefined },
+		{ name: 123, target: {}, key: 'key', descriptor: undefined, apply: () => { } },
+		{ name: 'name', target: [], key: 'key', descriptor: undefined, apply: () => { } },
+		{ name: 'name', target: {}, key: 123, descriptor: undefined, apply: () => { } },
+		{ name: 'name', target: {}, key: 'key', descriptor: 123, apply: () => { } },
+		{ name: 'name', target: {}, key: 'key', descriptor: undefined, apply: null },
 	];
 	invalid.forEach((value) => {
 		t.notOk(isMutationInterface(value), `${JSON.stringify(value)} is not a MutationInterface`);
 	});
 
 	const valid = [
-		{ name: 'name', target: {}, key: 'key', descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', target: () => { }, key: 'key', descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', target: {}, key: Symbol('key'), descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', target: {}, key: 'key', descriptor: { value: 'foo' }, apply: () => { }, visible: true },
-		{ name: 'name', target: {}, key: 'key', value: null, descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', target: () => { }, key: 'key', value: null, descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', target: {}, key: Symbol('key'), value: null, descriptor: undefined, apply: () => { }, visible: true },
-		{ name: 'name', target: {}, key: 'key', value: null, descriptor: { value: 'foo' }, apply: () => { }, visible: true },
+		{ name: 'name', target: {}, key: 'key', descriptor: undefined, apply: () => { } },
+		{ name: 'name', target: () => { }, key: 'key', descriptor: undefined, apply: () => { } },
+		{ name: 'name', target: {}, key: Symbol('key'), descriptor: undefined, apply: () => { } },
+		{ name: 'name', target: {}, key: 'key', descriptor: { value: 'foo' }, apply: () => { } },
+		{ name: 'name', target: {}, key: 'key', value: null, descriptor: undefined, apply: () => { } },
+		{ name: 'name', target: () => { }, key: 'key', value: null, descriptor: undefined, apply: () => { } },
+		{ name: 'name', target: {}, key: Symbol('key'), value: null, descriptor: undefined, apply: () => { } },
+		{ name: 'name', target: {}, key: 'key', value: null, descriptor: { value: 'foo' }, apply: () => { } },
 	];
 	valid.forEach((value) => {
 		t.ok(isMutationInterface(value), `${JSON.stringify(value)} is a MutationInterface`);

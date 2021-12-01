@@ -26,7 +26,6 @@ test('Domain/ValueObject/ValueMutation - instance properties', (t) => {
 	t.equal(mutation.key, key, `key is "${key}"`);
 	t.equal(mutation.value, value, `value is '${value}'`);
 	t.deepEqual(mutation.descriptor, { value }, `descriptor is {value: 'myValue'}`);
-	t.equal(mutation.visible, true, `visible is true`);
 
 	t.end();
 });

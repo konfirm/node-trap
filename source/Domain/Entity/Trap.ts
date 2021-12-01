@@ -66,9 +66,10 @@ export class Trap<T extends object = object, O extends MutationOptions<T> = Muta
 	ownKeys(target: T): ArrayLike<string | symbol> {
 		return this.mutations.findAll({ target })
 			.reduce(
-				(carry: Array<string | symbol>, mutation) => mutation.visible
-					? carry.concat(mutation.key)
-					: carry.filter((key) => key !== mutation.key),
+				(carry: Array<string | symbol>, mutation) =>
+					mutation instanceof DeletionMutation || (mutation instanceof PropertyMutation && !mutation.descriptor?.enumerable)
+						? carry.filter((key) => key !== mutation.key)
+						: carry.concat(mutation.key),
 				Object.keys(target)
 			);
 	}

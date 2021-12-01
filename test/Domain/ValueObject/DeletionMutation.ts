@@ -26,7 +26,6 @@ test('Domain/ValueObject/DeletionMutation - instance properties', (t) => {
 	t.equal(mutation.key, key, `key is "${key}"`);
 	t.equal(mutation.value, undefined, `value is undefined`);
 	t.equal(mutation.descriptor, undefined, `descriptor is undefined`);
-	t.equal(mutation.visible, false, `visible is false`);
 
 	t.end();
 });

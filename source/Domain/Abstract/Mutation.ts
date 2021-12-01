@@ -87,17 +87,6 @@ export abstract class AbstractMutation<T extends MutationOptions = MutationOptio
 	}
 
 	/**
-	 * The (property) visibility
-	 *
-	 * @readonly
-	 * @type {boolean}
-	 * @memberof AbstractMutation
-	 */
-	get visible(): boolean {
-		return true;
-	}
-
-	/**
 	 * Apply the mutation on its target
 	 *
 	 * @memberof AbstractMutation

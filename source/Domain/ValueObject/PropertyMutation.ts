@@ -64,19 +64,6 @@ export class PropertyMutation<T extends MutationOptions = MutationOptions> exten
 	}
 
 	/**
-	 * The (property) visibility
-	 *
-	 * @readonly
-	 * @type {boolean}
-	 * @memberof AbstractMutation
-	 */
-	get visible(): boolean {
-		const { descriptor: { enumerable = false } = {} } = this;
-
-		return enumerable;
-	}
-
-	/**
 	 * apply the property mutation to the target
 	 *
 	 * @memberof PropertyMutation

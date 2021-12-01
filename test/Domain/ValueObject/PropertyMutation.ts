@@ -41,7 +41,6 @@ test('Domain/ValueObject/PropertyMutation - instance properties', (t) => {
 	t.equal(mutation.key, key, `key is "${key}"`);
 	t.equal(mutation.value, value, `value is '${value}'`);
 	t.deepEqual(mutation.descriptor, { configurable: true, enumerable: true, writable: true, value }, `descriptor is { configurable: true, enumerable: true, writable: true, value: 'myValue' }`);
-	t.equal(mutation.visible, true, `visible is true`);
 
 	t.end();
 });
@@ -59,15 +58,12 @@ test('Domain/ValueObject/PropertyMutation - clean up descriptor', (t) => {
 
 	t.deepEqual(value.descriptor, { value: 'value', writable: true, configurable: false, enumerable: false }, 'value.descriptor has get removed');
 	t.equal(value.value, 'value', 'value.value is "value"');
-	t.equal(value.visible, false, `value.visible is false`);
 
 	t.deepEqual(getter.descriptor, { configurable: false, enumerable: true, get }, 'getter.descriptor has value and writable removed');
 	t.equal(getter.value, 'getter', 'getter.value is "getter"');
-	t.equal(getter.visible, true, `getter.visible is true`);
 
 	t.deepEqual(unknown.descriptor, { value: 'unknown' }, 'unknown.descriptor is newly created');
 	t.equal(unknown.value, 'unknown', 'unknown.value is "unknown"');
-	t.equal(unknown.visible, false, `unknown.visible is false`);
 
 	t.end();
 });
