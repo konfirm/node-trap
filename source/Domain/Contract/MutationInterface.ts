@@ -1,6 +1,6 @@
-import type { MutationOptions } from "./MutationOptions";
+import { Descriptor, isDescriptor } from "@konfirm/descriptor";
 import { any, isBoolean, isFunction, isObject, isString, isStructure, isSymbol, isUndefined } from "@konfirm/guard";
-import { isPropertyDescriptor } from '../Guard/PropertyDescriptor';
+import type { MutationOptions } from "./MutationOptions";
 
 /**
  * Interface describing a Mutation
@@ -14,18 +14,21 @@ export interface MutationInterface<T extends MutationOptions = MutationOptions> 
 	readonly target: T['target'];
 	readonly key: T['key'];
 	readonly value: T['value'];
-	readonly descriptor: PropertyDescriptor | undefined;
+	readonly descriptor: Descriptor | undefined;
 	readonly visible: boolean;
 
 	apply(): void;
 }
 
-export const isMutationInterface = isStructure<MutationInterface>({
-	name: isString,
-	target: any(isObject, isFunction),
-	key: any(isString, isSymbol),
-	value: () => true,
-	descriptor: any(isUndefined, isPropertyDescriptor),
-	apply: isFunction,
-	visible: isBoolean,
-}, ['value']);
+export const isMutationInterface = isStructure<MutationInterface>(
+	{
+		name: isString,
+		target: any(isObject, isFunction),
+		key: any(isString, isSymbol),
+		value: () => true,
+		descriptor: any(isUndefined, isDescriptor),
+		apply: isFunction,
+		visible: isBoolean,
+	},
+	['value']
+);
