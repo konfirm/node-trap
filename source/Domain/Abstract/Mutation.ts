@@ -1,128 +1,131 @@
-const storage = new WeakMap();
+import type { MutationOptions } from '../Contract/MutationOptions';
+import type { MutationInterface } from '../Contract/MutationInterface';
+
+const store: WeakMap<AbstractMutation, MutationOptions> = new WeakMap();
 
 /**
- * Mutation abstraction
+ * Abstract Mutation
  *
+ * @export
+ * @abstract
  * @class AbstractMutation
+ * @implements {MutationInterface<T>}
+ * @template T
  */
-export abstract class AbstractMutation {
+export abstract class AbstractMutation<T extends MutationOptions = MutationOptions> implements MutationInterface<T> {
 	/**
 	 * Creates an instance of AbstractMutation
 	 *
-	 * @param {*} args
+	 * @param {T} options
 	 * @memberof AbstractMutation
 	 */
-	constructor(...args) {
-		const order = ["target", "key", "value"];
-
-		// storage.set(this, order.reduce((carry, key, index) => Object.assign(carry, { [key]: args[index] }), {}));
-		storage.set(
-			this,
-			new Map(order.map((key, index) => [key, args[index]]))
-		);
+	constructor(options: T) {
+		store.set(this, options);
 	}
 
 	/**
-	 * Determine whether the seek map key/value pairs match the mutation
-	 * key/value pairs
-	 *
-	 * @param {Map} seek
-	 * @returns {Boolean} matches
-	 * @memberof AbstractMutation
-	 */
-	matches(seek) {
-		const map = storage.get(this);
-
-		// return Object.keys(seek).every((key) => seek[key] === map[seek]);
-		for (const [key, value] of seek) {
-			if (!(map.has(key) && map.get(key) === value)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Apply the mutation to the target, changing the value for given key
-	 *
-	 * @memberof AbstractMutation
-	 */
-	apply() {
-		throw new Error("Not implemented");
-	}
-
-	/**
-	 * Obtain the name of the Mutation
+	 * the name
 	 *
 	 * @readonly
+	 * @type {string}
 	 * @memberof AbstractMutation
 	 */
-	get name() {
-		const {
-			constructor: { name }
-		} = this;
+	get name(): string {
+		const { constructor: { name } } = Object.getPrototypeOf(this);
 
 		return name.replace(/([^A-Z]+)([A-Z]+)/g, "$1-$2").toLowerCase();
 	}
 
 	/**
-	 * Obtain the configured target
+	 * the target
 	 *
 	 * @readonly
+	 * @type {T['target']}
 	 * @memberof AbstractMutation
 	 */
-	get target() {
-		const map = storage.get(this);
+	get target(): T['target'] {
+		const { target } = store.get(this);
 
-		return map.get("target");
+		return target;
 	}
 
 	/**
-	 * Obtain the configured key
+	 * the key
 	 *
 	 * @readonly
+	 * @type {T['key']}
 	 * @memberof AbstractMutation
 	 */
-	get key() {
-		const map = storage.get(this);
+	get key(): T['key'] {
+		const { key } = store.get(this);
 
-		return map.get("key");
+		return key;
 	}
 
 	/**
-	 * Obtain the configured value
+	 * the value
 	 *
 	 * @readonly
+	 * @type {T['value']}
 	 * @memberof AbstractMutation
 	 */
-	get value() {
-		const map = storage.get(this);
+	get value(): T['value'] {
+		const { value } = store.get(this);
 
-		return map.get("value");
+		return value;
 	}
 
 	/**
-	 * Create the string representation of the Mutation
+	 * The (property) descriptor
 	 *
-	 * @returns {String} mutation
+	 * @readonly
+	 * @type {(PropertyDescriptor | undefined)}
 	 * @memberof AbstractMutation
 	 */
-	toString() {
-		const { name, key } = this;
-
-		return `${name}: ${key}`;
+	get descriptor(): PropertyDescriptor | undefined {
+		return undefined;
 	}
 
 	/**
-	 * Create the JSON(able) representation of the Mutation
+	 * The (property) visibility
 	 *
-	 * @returns {Object} mutation
+	 * @readonly
+	 * @type {boolean}
 	 * @memberof AbstractMutation
 	 */
-	toJSON() {
-		const { name, key } = this;
+	get visible(): boolean {
+		return true;
+	}
 
-		return { name, key };
+	/**
+	 * Apply the mutation on its target
+	 *
+	 * @memberof AbstractMutation
+	 */
+	apply(): void {
+		throw new Error('Not implemented');
+	}
+
+	/**
+	 * toString implementation
+	 *
+	 * @param {string} [template='{name}: {key} = {value}']
+	 * @return {*}  {string}
+	 * @memberof AbstractMutation
+	 */
+	toString(template: string = '{name}: {key} = {value}'): string {
+		return template.replace(/\{([^\}]+)\}/g, (_, key) => this[key]);
+	}
+
+	/**
+	 * toJSON implementation
+	 *
+	 * @return {*}  {{ [key: string]: unknown }}
+	 * @memberof AbstractMutation
+	 */
+	toJSON(): { [key: string]: unknown } {
+		const { name, key, value } = this;
+
+		return { name, key, value };
 	}
 }
