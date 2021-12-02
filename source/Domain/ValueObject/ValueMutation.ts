@@ -31,7 +31,7 @@ export class ValueMutation<T extends MutationOptions = MutationOptions> extends 
 	get descriptor(): PropertyDescriptor {
 		const { value } = this;
 
-		return { value };
+		return { configurable: true, enumerable: true, value, writable: true };
 	}
 
 	/**

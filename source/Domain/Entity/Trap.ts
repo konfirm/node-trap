@@ -1,4 +1,3 @@
-import { DescriptorMapper } from "@konfirm/descriptor";
 import type { MutationInterface } from "../Contract/MutationInterface";
 import type { MutationOptions } from "../Contract/MutationOptions";
 import { DeletionMutation } from "../ValueObject/DeletionMutation";
@@ -81,14 +80,8 @@ export class Trap<T extends object = object, O extends MutationOptions<T> = Muta
 	 * @memberof Trap
 	 */
 	getOwnPropertyDescriptor(target: T, key: string | symbol): PropertyDescriptor | undefined {
-		const initial = Object.assign({}, Object.getOwnPropertyDescriptor(target, key));
-		const combined = this.mutations.findAll({ target, key })
-			.reduce(
-				(carry = {}, { descriptor }) => DescriptorMapper.merge(carry, descriptor),
-				initial
-			);
-
-		return combined && Object.keys(combined).length ? combined : undefined;
+		return this.mutations.findAll({ target, key })
+			.reduce((_, { descriptor }) => descriptor, Object.getOwnPropertyDescriptor(target, key));
 	}
 
 	/**
