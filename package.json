@@ -34,6 +34,10 @@
   ],
   "author": "Rogier Spieker <rogier@konfirm.eu>",
   "license": "MIT",
+  "files": [
+    "dist",
+    "source"
+  ],
   "engines": {
     "node": ">=12"
   },
