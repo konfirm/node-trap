@@ -119,7 +119,8 @@ export class Trap<T extends object = object, O extends MutationOptions<T> = Muta
 						? carry.filter((key) => key !== mutation.key)
 						: carry.concat(mutation.key),
 				Object.keys(target)
-			);
+			)
+			.filter((v, i, a) => a.indexOf(v) === i);
 	}
 
 	/**

@@ -182,6 +182,7 @@ test('Domain/Entity/Trap - ownKeys', (t) => {
 		trap.defineProperty(target, 'one', { value: 1, enumerable: true });
 		t.deepEqual(trap.ownKeys(target), ['three', 'four', 'one'], `${name}: ownKeys is ["three", "four", "one"]`);
 
+		trap.set(target, 'two', 2.2);
 		trap.set(target, 'two', 2);
 		t.deepEqual(trap.ownKeys(target), ['three', 'four', 'one', 'two'], `${name}: ownKeys is ["three", "four", "one", "two"]`);
 
@@ -194,12 +195,12 @@ test('Domain/Entity/Trap - ownKeys', (t) => {
 		trap.deleteProperty(target, 'three');
 		t.deepEqual(trap.ownKeys(target), ['four'], `${name}: ownKeys is ["four"] after deleting "three"`);
 
-		const count = single ? 2 : 6;
+		const count = single ? 2 : 7;
 		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
-	t.equal(all.findAll({ target }).length, 6, 'new Trap(): has 6 operations');
-	t.equal(all.count({ target }), 6, 'new Trap(): has count 6');
+	t.equal(all.findAll({ target }).length, 7, 'new Trap(): has 7 operations');
+	t.equal(all.count({ target }), 7, 'new Trap(): has count 7');
 	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operations');
 	t.equal(one.count({ target }), 2, 'new Trap(true): has count 2');
 
