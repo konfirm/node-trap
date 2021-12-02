@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `Trap.commit` and `Trap.rollback` now support an optional search argument to select a subset of mutations to be committed or rolled back.
+- New `Trap.count` method, allowing to count the number of mutations, optionally matching a subset of mutation options (e.g. target and/or key)
 - Support for IIFE, CJS, ESM and TypeScript
 
 ### Changed
@@ -17,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **BREAKING** There is no more default export
 
 ### Removed
-- **BREAKING** The Trap no longer exposes the collected mutations, this was introduced mainly to make unit testing possible and was no longer needed
+- **BREAKING** The Trap no longer exposes the collected mutations, this was introduced mainly to make unit testing possible and was no longer needed, there is now a `count` method on `Trap` which allows for counting all/specific mutations.
 
 
 ## [1.2.7] - 2020-01-16

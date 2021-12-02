@@ -83,6 +83,14 @@ trap.rollback({ key: 'sample' });    // removes all collected mutations for key 
 trap.rollback();                     // removes all collected mutations
 ```
 
+### `count`
+As v2.0 of `Trap` removed the mutations collection from direct access, the `count` method allows for counting the number of mutations (optionally filtered by a search parameter).
+
+```js
+trap.count({ target: myTarget }); // counts all mutations with target myTarget
+trap.count({ key: 'sample' });    // counts all mutations for key 'sample'
+trap.count();                     // counts all mutations
+```
 
 ### Implemented Trap functions
 Trap provides most of the Proxy handler methods which directly change object properties.
