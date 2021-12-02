@@ -48,6 +48,21 @@ export class Collection<T extends object> {
 	}
 
 	/**
+	 * Determine the number of items in the collection, optionally reduced to items matching the provided structure
+	 *
+	 * @param {Partial<T>} [seek]
+	 * @return {*}  {number}
+	 * @memberof Collection
+	 */
+	count(seek?: Partial<T>): number {
+		const list = seek
+			? this.items.filter(this.seeker(seek))
+			: this.items;
+
+		return list.length;
+	}
+
+	/**
 	 * Find the first item in the collection based on a (partial) structure
 	 *
 	 * @param {Partial<T>} seek

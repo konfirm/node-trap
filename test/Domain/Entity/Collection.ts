@@ -61,6 +61,19 @@ const a1 = [1, 4, 6, 7].map((i) => items[i]);
 const b1 = [2, 4, 5, 7].map((i) => items[i]);
 const c1 = [3, 5, 6, 7].map((i) => items[i]);
 
+test('Domain/Entity/Collection - count', (t) => {
+	const foundA1 = collection.count({ a: 1 });
+	const foundB1 = collection.count({ b: 1 });
+	const foundC1 = collection.count({ c: 1 });
+
+	t.equal(collection.count(), items.length, `counts ${items.length} items in total`);
+	t.equal(foundA1, a1.length, 'counts 4 items for {a: 1}');
+	t.equal(foundB1, b1.length, 'counts 4 items for {b: 1}');
+	t.equal(foundC1, b1.length, 'counts 4 items for {c: 1}');
+
+	t.end();
+});
+
 test('Domain/Entity/Collection - find', (t) => {
 	const foundA1 = collection.find({ a: 1 });
 	const foundB1 = collection.find({ b: 1 });

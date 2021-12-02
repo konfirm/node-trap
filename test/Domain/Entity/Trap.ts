@@ -25,21 +25,21 @@ const keys = Object.keys(target);
  * @param {(trap: Export.Trap, description: string) => void} call
  * @return {*}  {Array<Collection<any>>}
  */
-function runner(call: (trap: Export.Trap, description: string) => void): Array<Collection<any>> {
+function runner(call: (trap: Export.Trap, description: string, single: boolean) => void): Array<Collection<any>> {
 	const traps = [
-		{ description: 'new Trap()', trap: new Trap() },
-		{ description: 'new Trap(true)', trap: new Trap(true) },
+		{ description: 'new Trap()', trap: new Trap(), single: false },
+		{ description: 'new Trap(true)', trap: new Trap(true), single: true },
 	];
 
-	return traps.map(({ trap, description }) => {
-		call(trap, description);
+	return traps.map(({ trap, description, single }) => {
+		call(trap, description, single);
 
 		return Collection.for(trap);
 	});
 }
 
 test('Domain/Entity/Trap - defineProperty', (t) => {
-	const [all, one] = runner((trap, name) => {
+	const [all, one] = runner((trap, name, single) => {
 		t.equal(trap.get(target, 'three'), 3, `${name}: three is 3`);
 		t.equal(trap.get(target, 'sample'), undefined, `${name}: sample is undefined`);
 
@@ -51,16 +51,21 @@ test('Domain/Entity/Trap - defineProperty', (t) => {
 
 		trap.defineProperty(target, 'three', { value: 333 });
 		t.equal(trap.get(target, 'three'), 333, `${name}: three is 333`);
+
+		const count = single ? 2 : 3;
+		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
 	t.equal(all.findAll({ target }).length, 3, 'new Trap(): has 3 operations');
+	t.equal(all.count({ target }), 3, 'new Trap(): has count 3');
 	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operations');
+	t.equal(one.count({ target }), 2, 'new Trap(true): has count 2');
 
 	t.end();
 });
 
 test('Domain/Entity/Trap - deleteProperty', (t) => {
-	const [all, one] = runner((trap, name) => {
+	const [all, one] = runner((trap, name, single) => {
 		t.equal(trap.get(target, 'three'), 3, `${name}: three is 3`);
 		t.equal(trap.get(target, 'sample'), undefined, `${name}: sample is undefined`);
 
@@ -72,16 +77,21 @@ test('Domain/Entity/Trap - deleteProperty', (t) => {
 
 		trap.deleteProperty(target, 'three');
 		t.equal(trap.get(target, 'three'), undefined, `${name}: three is undefined`);
+
+		const count = single ? 1 : 3;
+		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
 	t.equal(all.findAll({ target }).length, 3, 'new Trap(): has 3 operations');
+	t.equal(all.count({ target }), 3, 'new Trap(): has count 3');
 	t.equal(one.findAll({ target }).length, 1, 'new Trap(true): has 1 operation');
+	t.equal(one.count({ target }), 1, 'new Trap(true): has count 1');
 
 	t.end();
 });
 
 test('Domain/Entity/Trap - get', (t) => {
-	const [all, one] = runner((trap, name) => {
+	const [all, one] = runner((trap, name, single) => {
 		t.equal(trap.get(target, 'three'), 3, `${name}: three is 3`);
 		t.equal(trap.get(target, 'sample'), undefined, `${name}: sample is undefined`);
 
@@ -93,17 +103,22 @@ test('Domain/Entity/Trap - get', (t) => {
 
 		trap.deleteProperty(target, 'sample');
 		t.equal(trap.get(target, 'sample'), undefined, `${name}: sample is undefined`);
+
+		const count = single ? 0 : 3;
+		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
 	t.equal(all.findAll({ target }).length, 3, 'new Trap(): has 3 operations');
+	t.equal(all.count({ target }), 3, 'new Trap(): has count 3');
 	t.equal(one.findAll({ target }).length, 0, 'new Trap(true): has 0 operations');
+	t.equal(one.count({ target }), 0, 'new Trap(true): has count 0');
 
 	t.end();
 });
 
 test('Domain/Entity/Trap - getOwnPropertyDescriptor', (t) => {
 	const get = () => 'get';
-	const [all, one] = runner((trap, name) => {
+	const [all, one] = runner((trap, name, single) => {
 		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'three'), { value: 3, writable: true, enumerable: true, configurable: true }, `${name}: property descriptor for "three" is { value: 3, writable: true, enumerable: true, configurable: true }`);
 		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), undefined, `${name}: property descriptor is undefined`);
 
@@ -115,16 +130,21 @@ test('Domain/Entity/Trap - getOwnPropertyDescriptor', (t) => {
 
 		trap.defineProperty(target, 'sample', { get });
 		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), { get, enumerable: false }, `${name}: property descriptor is {get: () => "defined", enumerable: false}`);
+
+		const count = single ? 1 : 3;
+		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
 	t.equal(all.findAll({ target }).length, 3, 'new Trap(): has 3 operations');
+	t.equal(all.count({ target }), 3, 'new Trap(): has count 3');
 	t.equal(one.findAll({ target }).length, 1, 'new Trap(true): has 1 operation');
+	t.equal(one.count({ target }), 1, 'new Trap(true): has count 1');
 
 	t.end();
 });
 
 test('Domain/Entity/Trap - has', (t) => {
-	const [all, one] = runner((trap, name) => {
+	const [all, one] = runner((trap, name, single) => {
 		t.equal(trap.has(target, 'three'), true, `${name}: has property three`);
 		t.equal(trap.has(target, 'sample'), false, `${name}: does not have property sample`);
 
@@ -140,16 +160,20 @@ test('Domain/Entity/Trap - has', (t) => {
 		trap.set(target, 'sample', 'defined');
 		t.equal(trap.has(target, 'sample'), true, `${name}: has property sample after set`);
 
+		const count = single ? 2 : 4;
+		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
 	t.equal(all.findAll({ target }).length, 4, 'new Trap(): has 4 operations');
+	t.equal(all.count({ target }), 4, 'new Trap(): has count 4');
 	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operations');
+	t.equal(one.count({ target }), 2, 'new Trap(true): has count 2');
 
 	t.end();
 });
 
 test('Domain/Entity/Trap - ownKeys', (t) => {
-	const [all, one] = runner((trap, name) => {
+	const [all, one] = runner((trap, name, single) => {
 		t.deepEqual(trap.ownKeys(target), ['three', 'four'], `${name}: ownKeys is an empty array`);
 
 		trap.defineProperty(target, 'zero', { get: () => 0 });
@@ -169,16 +193,21 @@ test('Domain/Entity/Trap - ownKeys', (t) => {
 
 		trap.deleteProperty(target, 'three');
 		t.deepEqual(trap.ownKeys(target), ['four'], `${name}: ownKeys is ["four"] after deleting "three"`);
+
+		const count = single ? 2 : 6;
+		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
 	t.equal(all.findAll({ target }).length, 6, 'new Trap(): has 6 operations');
+	t.equal(all.count({ target }), 6, 'new Trap(): has count 6');
 	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operations');
+	t.equal(one.count({ target }), 2, 'new Trap(true): has count 2');
 
 	t.end();
 });
 
 test('Domain/Entity/Trap - set', (t) => {
-	const [all, one] = runner((trap, name) => {
+	const [all, one] = runner((trap, name, single) => {
 		t.deepEqual(trap.get(target, 'three'), 3, `${name}: three is 3`);
 		t.deepEqual(trap.get(target, 'sample'), undefined, `${name}: sample is undefined`);
 
@@ -196,16 +225,21 @@ test('Domain/Entity/Trap - set', (t) => {
 
 		trap.set(target, 'three', 333);
 		t.deepEqual(trap.get(target, 'three'), 333, `${name}: three is 333`);
+
+		const count = single ? 2 : 5;
+		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
 	t.equal(all.findAll({ target }).length, 5, 'new Trap(): has 5 operations');
+	t.equal(all.count({ target }), 5, 'new Trap(): has count 5');
 	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operations');
+	t.equal(one.count({ target }), 2, 'new Trap(true): has count 2');
 
 	t.end();
 });
 
 test('Domain/Entity/Trap - commit', (t) => {
-	const [all, one] = runner((trap, name) => {
+	const [all, one] = runner((trap, name, single) => {
 		const target: any = { three: 3, four: 4 };
 
 		trap.defineProperty(target, 'one', { value: 1, enumerable: true });
@@ -217,16 +251,20 @@ test('Domain/Entity/Trap - commit', (t) => {
 
 		t.deepEqual(target, { one: 1, three: 3, five: 5 }, `${name}: target is { one: 1, two: 2, three: 3, five: 5 }`);
 		t.equal(target.two, 2, `${name}: two is 2 (and hidden from deepEqual)`);
+
+		t.equal(trap.count(), 0, `${name}: has count 0`);
 	});
 
 	t.equal(all.findAll({}).length, 0, 'new Trap(): has 0 operations');
+	t.equal(all.count({}), 0, 'Trap(): has count 0');
 	t.equal(one.findAll({}).length, 0, 'new Trap(true): has 0 operations');
+	t.equal(one.count({}), 0, 'new Trap(true): has count 0');
 
 	t.end();
 });
 
 test('Domain/Entity/Trap - rollback', (t) => {
-	const [all, one] = runner((trap, name) => {
+	const [all, one] = runner((trap, name, single) => {
 		const target: any = { three: 3, four: 4 };
 
 		trap.defineProperty(target, 'one', { value: 1, enumerable: true });
@@ -240,10 +278,14 @@ test('Domain/Entity/Trap - rollback', (t) => {
 		t.equal(target.one, undefined, `${name}: one is undefined`);
 		t.equal(target.two, undefined, `${name}: two is undefined`);
 		t.equal(target.five, undefined, `${name}: five is undefined`);
+
+		t.equal(trap.count(), 0, `${name}: has count 0`);
 	});
 
 	t.equal(all.findAll({}).length, 0, 'new Trap(): has 0 operations');
+	t.equal(all.count({}), 0, 'Trap(): has count 0');
 	t.equal(one.findAll({}).length, 0, 'new Trap(true): has 0 operations');
+	t.equal(one.count({}), 0, 'new Trap(true): has count 0');
 
 	t.end();
 });

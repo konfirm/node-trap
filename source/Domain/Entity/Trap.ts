@@ -138,6 +138,17 @@ export class Trap<T extends object = object, O extends MutationOptions<T> = Muta
 	}
 
 	/**
+	 * Determine the number of mutations, optionally reduced to mutations matching the provided structure
+	 *
+	 * @param {Partial<O>} [seek]
+	 * @return {*}  {number}
+	 * @memberof Trap
+	 */
+	count(seek?: Partial<O>): number {
+		return this.mutations.count(seek);
+	}
+
+	/**
 	 * commit all or a subset of collected mutations
 	 *
 	 * @param {Partial<O>} [seek={}]
