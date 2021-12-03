@@ -6,6 +6,7 @@ test('Domain/Entity/Trap - exports', (t) => {
 		'Trap',
 		'isMutationInterface',
 		'isMutationOptions',
+		'assertMutationOptions',
 		'DeletionMutation',
 		'PropertyMutation',
 		'ValueMutation',

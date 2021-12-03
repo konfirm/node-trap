@@ -15,13 +15,45 @@ test('Domain/Abstract/Mutation - exports', (t) => {
 });
 
 class TestMutation extends Export.AbstractMutation { }
+
+test('Domain/Abstract/Mutation - constructor options', (t) => {
+	const invalid = [
+		{},
+		{ key: 'key' },
+		{ target: {} },
+		{ target: {}, key: 123 },
+	];
+	invalid.forEach((value: any) => {
+		t.throws(() => new TestMutation(value), /Invalid MutationOptions/, `invalid options ${JSON.stringify(value)}`);
+	});
+
+	const valid = [
+		{ target: {}, key: 'key' },
+		{ target: () => { }, key: 'key' },
+		{ target: [], key: 'key' },
+		{ target: {}, key: Symbol('key') },
+		{ target: () => { }, key: Symbol('key') },
+		{ target: [], key: Symbol('key') },
+		{ target: {}, key: 'key', value: null },
+		{ target: () => { }, key: 'key', value: null },
+		{ target: [], key: 'key', value: null },
+		{ target: {}, key: Symbol('key'), value: null },
+		{ target: () => { }, key: Symbol('key'), value: null },
+		{ target: [], key: Symbol('key'), value: null },
+	];
+	valid.forEach((value) => {
+		t.doesNotThrow(() => new TestMutation(value), `valid options ${JSON.stringify(value)}`);
+	})
+
+	t.end();
+});
+
 const target = {};
 const key = 'myKey';
 const value = 'myValue';
 const mutation = new TestMutation({ target, key, value });
 
 test('Domain/Abstract/Mutation - instance properties', (t) => {
-
 	t.equal(mutation.name, 'test-mutation', 'TestMutation has name "test-mutation"');
 	t.equal(mutation.target, target, 'target is the provided target');
 	t.equal(mutation.key, key, `key is "${key}"`);

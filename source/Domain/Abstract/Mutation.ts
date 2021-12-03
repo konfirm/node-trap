@@ -1,4 +1,4 @@
-import type { MutationOptions } from '../Contract/MutationOptions';
+import { assertMutationOptions, MutationOptions } from '../Contract/MutationOptions';
 import type { MutationInterface } from '../Contract/MutationInterface';
 
 const store: WeakMap<AbstractMutation, MutationOptions> = new WeakMap();
@@ -20,6 +20,8 @@ export abstract class AbstractMutation<T extends MutationOptions = MutationOptio
 	 * @memberof AbstractMutation
 	 */
 	constructor(options: T) {
+		assertMutationOptions(options);
+
 		store.set(this, options);
 	}
 

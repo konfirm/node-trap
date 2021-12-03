@@ -61,6 +61,13 @@ Trap keeps track of changes within proxied objects, and exposes two methods besi
 | `ValueMutation`       | Mutation describing value mutations, created by `set` (`target.key = ...`) operations                                        |
 | `AbstractMutation`    | abstract implementation of a Mutation                                                                                        |
 
+### type `MutationOptions`
+
+| property | type                        | required | notes                                                                                                       |
+| -------- | --------------------------- | -------- | ----------------------------------------------------------------------------------------------------------- |
+| `target` | `Object | Function | Array` | yes      | this can be narrowed down (e.g. only objects of a specific type), but never widened (e.g. not add booleans) |
+| `key`    | `string | symbol`           | yes      | this can be narrowed doen (e.g. only strings), but not wideneded (e.g. not add numbers)                     |
+| `value`  | `any`                       | no       |
 
 ### `Trap([trackOnlyLastMutation])`
 The Trap constructor accepts the `trackOnlyLastMutation` argument (default `false`) indicating whether or not the mutations should be limited to one per property. If `trackOnlyLastMutation` is set to `true` value, any previous change to the trapped object is remove before applying the next value. Should the next value effectively restore the original state, no new mutations is created and the number of mutations is decreased.
