@@ -1,3 +1,4 @@
+import { DescriptorMapper } from "@konfirm/descriptor";
 import { AbstractMutation } from "../Abstract/Mutation";
 import { MutationOptions } from "../Contract/MutationOptions";
 
@@ -29,7 +30,9 @@ export class ValueMutation<T extends MutationOptions = MutationOptions> extends 
 	 * @memberof ValueMutation
 	 */
 	get descriptor(): PropertyDescriptor {
-		const { value } = this;
+		const { target, key, value } = this;
+
+		return DescriptorMapper.merge(Object.getOwnPropertyDescriptor(target, key), { value });
 
 		return { configurable: true, enumerable: true, value, writable: true };
 	}
