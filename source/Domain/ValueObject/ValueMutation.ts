@@ -32,7 +32,10 @@ export class ValueMutation<T extends MutationOptions = MutationOptions> extends 
 	get descriptor(): PropertyDescriptor {
 		const { target, key, value } = this;
 
-		return DescriptorMapper.merge(Object.getOwnPropertyDescriptor(target, key), { value });
+		return DescriptorMapper.merge(
+			Object.getOwnPropertyDescriptor(target, key) || { configurable: true, enumerable: true, writable: true },
+			{ value }
+		);
 
 		return { configurable: true, enumerable: true, value, writable: true };
 	}
