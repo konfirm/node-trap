@@ -111,7 +111,7 @@ export class Trap<T extends object = object, O extends MutationOptions<T> = Muta
 					mutation instanceof DeletionMutation || (mutation instanceof PropertyMutation && !mutation.descriptor?.enumerable)
 						? carry.filter((key) => key !== mutation.key)
 						: carry.concat(mutation.key),
-				Object.keys(target)
+				Reflect.ownKeys(target)
 			)
 			.filter((v, i, a) => a.indexOf(v) === i);
 	}
