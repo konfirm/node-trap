@@ -1,7 +1,8 @@
+![tests](https://github.com/konfirm/node-trap/actions/workflows/tests.yml/badge.svg)
+![release](https://github.com/konfirm/node-trap/actions/workflows/release.yml/badge.svg)
+
 # Trap Module
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a1262f6063b47428c144ae57b0fc38a)](https://www.codacy.com/app/konfirm/node-trap?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=konfirm/node-trap&amp;utm_campaign=Badge_Grade)
-[![Build Status](https://travis-ci.org/konfirm/node-trap.svg?branch=master)](https://travis-ci.org/konfirm/node-trap)
 
 Provide traps for use as Proxy handler, allowing to keep track of changes and choose to commit or rollback changes
 
