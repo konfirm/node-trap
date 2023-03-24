@@ -1,6 +1,6 @@
 {
   "name": "@konfirm/trap",
-  "version": "2.0.0-beta.7",
+  "version": "2.0.0",
   "description": "Provide traps for use as Proxy handler, allowing to keep track of changes and choose to commit or rollback changes",
   "iife": "dist/trap.js",
   "main": "dist/trap.cjs.js",
