@@ -39,7 +39,7 @@
     "source"
   ],
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",
