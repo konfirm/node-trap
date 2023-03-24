@@ -16,7 +16,7 @@ $ npm install --save @konfirm/trap
 The Trap module is designed to handle and reflect Proxy manipulations to an object [Proxy](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy), during its handler assignment you can provide a Trap-instance or parts of it.
 
 ### Trap all mutations
-```js
+```ts
 //  include the Trap module
 // const { Trap } = require('@konfirm/trap');
 import { Trap } from '@konfirm/trap';
@@ -64,11 +64,11 @@ Trap keeps track of changes within proxied objects, and exposes two methods besi
 
 ### type `MutationOptions`
 
-| property | type                        | required | notes                                                                                                       |
-| -------- | --------------------------- | -------- | ----------------------------------------------------------------------------------------------------------- |
-| `target` | `Object | Function | Array` | yes      | this can be narrowed down (e.g. only objects of a specific type), but never widened (e.g. not add booleans) |
-| `key`    | `string | symbol`           | yes      | this can be narrowed doen (e.g. only strings), but not wideneded (e.g. not add numbers)                     |
-| `value`  | `any`                       | no       |
+| property | type                      | required | notes                                                                                                       |
+| -------- | ------------------------- | -------- | ----------------------------------------------------------------------------------------------------------- |
+| `target` | `Object\|Function\|Array` | yes      | this can be narrowed down (e.g. only objects of a specific type), but never widened (e.g. not add booleans) |
+| `key`    | `string                   | symbol`  | yes                                                                                                         | this can be narrowed doen (e.g. only strings), but not wideneded (e.g. not add numbers) |
+| `value`  | `any`                     | no       |
 
 ### `Trap([trackOnlyLastMutation])`
 The Trap constructor accepts the `trackOnlyLastMutation` argument (default `false`) indicating whether or not the mutations should be limited to one per property. If `trackOnlyLastMutation` is set to `true` value, any previous change to the trapped object is remove before applying the next value. Should the next value effectively restore the original state, no new mutations is created and the number of mutations is decreased.
@@ -76,7 +76,7 @@ The Trap constructor accepts the `trackOnlyLastMutation` argument (default `fals
 ### `commit`
 Apply collected mutations (optionally filtered by a search parameter) to the target and reset the mutation list.
 
-```js
+```ts
 trap.commit({ target: myTarget }); // applies all collected mutations with target myTarget
 trap.commit({ key: 'sample' });    // applies all collected mutations for key 'sample'
 trap.commit();                     // applies all collected mutations
@@ -85,7 +85,7 @@ trap.commit();                     // applies all collected mutations
 ### `rollback`
 Drop mutations (optionally filtered by a search parameter) so these will never be applied to the target.
 
-```js
+```ts
 trap.rollback({ target: myTarget }); // removes all collected mutations with target myTarget
 trap.rollback({ key: 'sample' });    // removes all collected mutations for key 'sample'
 trap.rollback();                     // removes all collected mutations
@@ -94,7 +94,7 @@ trap.rollback();                     // removes all collected mutations
 ### `count`
 As v2.0 of `Trap` removed the mutations collection from direct access, the `count` method allows for counting the number of mutations (optionally filtered by a search parameter).
 
-```js
+```ts
 trap.count({ target: myTarget }); // counts all mutations with target myTarget
 trap.count({ key: 'sample' });    // counts all mutations for key 'sample'
 trap.count();                     // counts all mutations
@@ -127,7 +127,7 @@ The following functions are currently not implemented by the Trap module, if the
 
 MIT License
 
-Copyright (c) 2017-2021 Rogier Spieker (Konfirm)
+Copyright (c) 2017-2023 Rogier Spieker (Konfirm)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

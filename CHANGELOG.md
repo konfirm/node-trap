@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+### Added
+### Changed
+### Removed
+
+
+## [2.0.0] - 2023-03-24
 
 ### Added
 - `Trap.commit` and `Trap.rollback` now support an optional search argument to select a subset of mutations to be committed or rolled back.
@@ -113,20 +119,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Initial release.
 
 
-[Unreleased]: https://github.com/konfirm/node-trap/compare/v1.2.7...HEAD
-[1.2.7]: https://github.com/konfirm/node-trap/compare/1.2.6...v1.2.7
-[1.2.6]: https://github.com/konfirm/node-trap/compare/1.2.5...v1.2.6
-[1.2.5]: https://github.com/konfirm/node-trap/compare/1.2.4...v1.2.5
-[1.2.4]: https://github.com/konfirm/node-trap/compare/1.2.3...v1.2.4
-[1.2.3]: https://github.com/konfirm/node-trap/compare/1.2.2...v1.2.3
-[1.2.2]: https://github.com/konfirm/node-trap/compare/1.2.1...v1.2.2
-[1.2.1]: https://github.com/konfirm/node-trap/compare/1.2.0...v1.2.1
-[1.2.0]: https://github.com/konfirm/node-trap/compare/1.1.3...v1.2.0
-[1.1.3]: https://github.com/konfirm/node-trap/compare/1.1.2...v1.1.3
-[1.1.2]: https://github.com/konfirm/node-trap/compare/1.1.1...v1.1.2
-[1.1.1]: https://github.com/konfirm/node-trap/compare/1.1.0...v1.1.1
-[1.1.0]: https://github.com/konfirm/node-trap/compare/1.0.1...v1.1.0
-[1.0.1]: https://github.com/konfirm/node-trap/compare/1.0.0...v1.0.1
+[Unreleased]: https://github.com/konfirm/node-trap/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/konfirm/node-trap/compare/v1.2.7...v2.0.0
+[1.2.7]: https://github.com/konfirm/node-trap/compare/v1.2.6...v1.2.7
+[1.2.6]: https://github.com/konfirm/node-trap/compare/v1.2.5...v1.2.6
+[1.2.5]: https://github.com/konfirm/node-trap/compare/v1.2.4...v1.2.5
+[1.2.4]: https://github.com/konfirm/node-trap/compare/v1.2.3...v1.2.4
+[1.2.3]: https://github.com/konfirm/node-trap/compare/v1.2.2...v1.2.3
+[1.2.2]: https://github.com/konfirm/node-trap/compare/v1.2.1...v1.2.2
+[1.2.1]: https://github.com/konfirm/node-trap/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/konfirm/node-trap/compare/v1.1.3...v1.2.0
+[1.1.3]: https://github.com/konfirm/node-trap/compare/v1.1.2...v1.1.3
+[1.1.2]: https://github.com/konfirm/node-trap/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/konfirm/node-trap/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/konfirm/node-trap/compare/v1.0.1...v1.1.0
+[1.0.1]: https://github.com/konfirm/node-trap/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/konfirm/node-trap/releases/tag/v1.0.0
 
 
