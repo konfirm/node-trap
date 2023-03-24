@@ -1,7 +1,8 @@
+![tests](https://github.com/konfirm/node-trap/actions/workflows/tests.yml/badge.svg)
+![release](https://github.com/konfirm/node-trap/actions/workflows/release.yml/badge.svg)
+
 # Trap Module
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a1262f6063b47428c144ae57b0fc38a)](https://www.codacy.com/app/konfirm/node-trap?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=konfirm/node-trap&amp;utm_campaign=Badge_Grade)
-[![Build Status](https://travis-ci.org/konfirm/node-trap.svg?branch=master)](https://travis-ci.org/konfirm/node-trap)
 
 Provide traps for use as Proxy handler, allowing to keep track of changes and choose to commit or rollback changes
 
@@ -15,9 +16,10 @@ $ npm install --save @konfirm/trap
 The Trap module is designed to handle and reflect Proxy manipulations to an object [Proxy](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy), during its handler assignment you can provide a Trap-instance or parts of it.
 
 ### Trap all mutations
-```
+```js
 //  include the Trap module
-const Trap = require('@konfirm/trap');
+// const { Trap } = require('@konfirm/trap');
+import { Trap } from '@konfirm/trap';
 //  create a trap instance
 const trap = new Trap();
 //  create the affected object
@@ -46,14 +48,57 @@ console.log('bar' in affect);  //  false
 ## API
 Trap keeps track of changes within proxied objects, and exposes two methods besides the implemented [trap functions](https://github.com/konfirm/node-trap#implementedtrapfunctions).
 
+### Exports
+
+| name                  | description                                                                                                                  |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `Trap`                | The `Trap` class itself                                                                                                      |
+| `MutationInterface`   | _TypeScript_ interface describing Mutations                                                                                  |
+| `isMutationInterface` | Type Guard validating whether the input is a `MutationInterface`                                                             |
+| `MutationOptions`     | _TypeScript_ type describing the target, key and optional value members of a `MutationInterface`                             |
+| `isMutationOptions`   | Type Guard validating whether the input is `MutationOptions`                                                                 |
+| `DeletionMutation`    | Mutation describing deletion mutations, created by `deleteProperty` (`delete target.key`) operations                         |
+| `PropertyMutation`    | Mutation describing property mutations, created by `defineProperty` (`Object.defineProperty(target, key, {...})`) operations |
+| `ValueMutation`       | Mutation describing value mutations, created by `set` (`target.key = ...`) operations                                        |
+| `AbstractMutation`    | abstract implementation of a Mutation                                                                                        |
+
+### type `MutationOptions`
+
+| property | type                        | required | notes                                                                                                       |
+| -------- | --------------------------- | -------- | ----------------------------------------------------------------------------------------------------------- |
+| `target` | `Object | Function | Array` | yes      | this can be narrowed down (e.g. only objects of a specific type), but never widened (e.g. not add booleans) |
+| `key`    | `string | symbol`           | yes      | this can be narrowed doen (e.g. only strings), but not wideneded (e.g. not add numbers)                     |
+| `value`  | `any`                       | no       |
+
 ### `Trap([trackOnlyLastMutation])`
-The Trap constructor accepts the `(bool0ish) trackOnlyLastMutation` argument (default `undefined`) indicating whether or not the mutations should be limited to one per property. If `trackOnlyLastMutation` is set to a `true`-ish value, any previous change to the trapped object is remove before applying the next value. Should the next value effectively restore the original state, no new mutations is created and the number of mutations is decreased.
+The Trap constructor accepts the `trackOnlyLastMutation` argument (default `false`) indicating whether or not the mutations should be limited to one per property. If `trackOnlyLastMutation` is set to `true` value, any previous change to the trapped object is remove before applying the next value. Should the next value effectively restore the original state, no new mutations is created and the number of mutations is decreased.
 
 ### `commit`
-Apply all collected mutations to the proxied object and reset the mutation list.
+Apply collected mutations (optionally filtered by a search parameter) to the target and reset the mutation list.
+
+```js
+trap.commit({ target: myTarget }); // applies all collected mutations with target myTarget
+trap.commit({ key: 'sample' });    // applies all collected mutations for key 'sample'
+trap.commit();                     // applies all collected mutations
+```
 
 ### `rollback`
-Drop all mutations so these will never be applied to the proxied object.
+Drop mutations (optionally filtered by a search parameter) so these will never be applied to the target.
+
+```js
+trap.rollback({ target: myTarget }); // removes all collected mutations with target myTarget
+trap.rollback({ key: 'sample' });    // removes all collected mutations for key 'sample'
+trap.rollback();                     // removes all collected mutations
+```
+
+### `count`
+As v2.0 of `Trap` removed the mutations collection from direct access, the `count` method allows for counting the number of mutations (optionally filtered by a search parameter).
+
+```js
+trap.count({ target: myTarget }); // counts all mutations with target myTarget
+trap.count({ key: 'sample' });    // counts all mutations for key 'sample'
+trap.count();                     // counts all mutations
+```
 
 ### Implemented Trap functions
 Trap provides most of the Proxy handler methods which directly change object properties.
@@ -65,6 +110,7 @@ Trap provides most of the Proxy handler methods which directly change object pro
   - [`has`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/has); traps `<key> in <Object>` calls
   - [`ownKeys`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/ownKeys); traps `Object.keys` calls
   - [`set`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler/set); traps property value setting
+
 
 ### Trap functions not implemented
 The following functions are currently not implemented by the Trap module, if there is a need for them to be added, feel free to submit an issue or create a pull request.
@@ -81,7 +127,7 @@ The following functions are currently not implemented by the Trap module, if the
 
 MIT License
 
-Copyright (c) 2017 Konfirm
+Copyright (c) 2017-2021 Rogier Spieker (Konfirm)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
