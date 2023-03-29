@@ -32,7 +32,7 @@ test('Domain/ValueObject/ValueMutation - instance properties', (t) => {
 	t.equal(addition.target, target, 'target is the provided target');
 	t.equal(addition.key, 'new', `key is "new"`);
 	t.equal(addition.value, value, `value is '${value}'`);
-	t.deepEqual(addition.descriptor, { value, configurable: true }, `addition descriptor is { value: "myValue", configurable: true }`);
+	t.deepEqual(addition.descriptor, { value, writable: true, enumerable: true, configurable: true }, `addition descriptor is { value: "myValue", configurable: true }`);
 
 	t.end();
 });

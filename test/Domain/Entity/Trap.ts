@@ -136,7 +136,7 @@ test('Domain/Entity/Trap - getOwnPropertyDescriptor', (t) => {
 		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'added'), undefined, `${name}: property descriptor for "added" is undefined`);
 
 		trap.set(target, 'added', 'done');
-		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'added'), { value: 'done', configurable: true }, `${name}: property descriptor for "added" is { value: "done" }`);
+		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'added'), { value: 'done', writable: true, enumerable: true, configurable: true }, `${name}: property descriptor for "added" is { value: "done" }`);
 
 		const count = single ? 2 : 4;
 		t.equal(trap.count(), count, `${name}: has count ${count}`);

@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 ### Added
+- Added the writable and enumerable flags to the PropertyDescriptor of ValueMutations of newly added properties
+
 ### Changed
 ### Removed
 
