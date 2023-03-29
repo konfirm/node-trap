@@ -31,8 +31,9 @@ export class ValueMutation<T extends MutationOptions = MutationOptions> extends 
 	 */
 	get descriptor(): PropertyDescriptor {
 		const { target, key, value } = this;
+		const defaults: Partial<PropertyDescriptor> = Object.getOwnPropertyDescriptor(target, key) || { configurable: true };
 
-		return DescriptorMapper.merge(Object.getOwnPropertyDescriptor(target, key), <Descriptor>{ value });
+		return DescriptorMapper.merge(defaults, { value });
 	}
 
 	/**

@@ -54,6 +54,14 @@ test('Proxy - Trap (all mutations)', (t) => {
 	t.ok('three' in target, 'target has property "three" after commit');
 	t.notOk('four' in target, 'target does not have property "four" after commit');
 
+	const descriptors = {
+		three: { value: 3, writable: true, enumerable: true, configurable: true },
+		one: { value: 1, writable: true, enumerable: true, configurable: true },
+		two: { value: 2, writable: false, enumerable: false, configurable: true },
+	};
+	t.equal(JSON.stringify(target), '{"three":3,"one":1}', `JSON.stringify on target is '{"three":3,"one":1}'`);
+	t.deepEqual(Object.getOwnPropertyDescriptors(target), descriptors, `Object.getOwnPropertyDescriptors on target is ${JSON.stringify(descriptors)}`);
+
 	t.end();
 });
 
@@ -108,6 +116,14 @@ test('Proxy - Trap (single key mutation)', (t) => {
 	t.equal(target.two, 2, 'target.two is 2');
 	t.ok('three' in target, 'target has property "three" after commit');
 	t.notOk('four' in target, 'target does not have property "four" after commit');
+
+	const descriptors = {
+		three: { value: 3, writable: true, enumerable: true, configurable: true },
+		one: { value: 1, writable: true, enumerable: true, configurable: true },
+		two: { value: 2, writable: false, enumerable: false, configurable: true },
+	};
+	t.equal(JSON.stringify(target), '{"three":3,"one":1}', `JSON.stringify on target is '{"three":3,"one":1}'`);
+	t.deepEqual(Object.getOwnPropertyDescriptors(target), descriptors, `Object.getOwnPropertyDescriptors on target is ${JSON.stringify(descriptors)}`);
 
 	t.end();
 });
