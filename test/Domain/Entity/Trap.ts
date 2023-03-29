@@ -120,25 +120,32 @@ test('Domain/Entity/Trap - getOwnPropertyDescriptor', (t) => {
 	const get = () => 'get';
 	const [all, one] = runner((trap, name, single) => {
 		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'three'), { value: 3, writable: true, enumerable: true, configurable: true }, `${name}: property descriptor for "three" is { value: 3, writable: true, enumerable: true, configurable: true }`);
-		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), undefined, `${name}: property descriptor is undefined`);
+		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), undefined, `${name}: property descriptor for "sample" is undefined`);
 
-		trap.defineProperty(target, 'sample', undefined);
-		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), undefined, `${name}: property descriptor is undefined`);
+		// define property
+		trap.defineProperty(target, 'sample', <any>undefined);
+		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), undefined, `${name}: property descriptor for "sample" is undefined`);
 
 		trap.defineProperty(target, 'sample', { value: 'defined' });
-		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), { value: 'defined', enumerable: false }, `${name}: property descriptor is {value:"defined", enumerable: false}`);
+		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), { value: 'defined', enumerable: false }, `${name}: property descriptor for "sample" is {value:"defined", enumerable: false}`);
 
 		trap.defineProperty(target, 'sample', { get });
-		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), { get, enumerable: false }, `${name}: property descriptor is {get: () => "defined", enumerable: false}`);
+		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'sample'), { get, enumerable: false }, `${name}: property descriptor for "sample" is {get: () => "defined", enumerable: false}`);
 
-		const count = single ? 1 : 3;
+		// set property
+		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'added'), undefined, `${name}: property descriptor for "added" is undefined`);
+
+		trap.set(target, 'added', 'done');
+		t.deepEqual(trap.getOwnPropertyDescriptor(target, 'added'), { value: 'done', configurable: true }, `${name}: property descriptor for "added" is { value: "done" }`);
+
+		const count = single ? 2 : 4;
 		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
-	t.equal(all.findAll({ target }).length, 3, 'new Trap(): has 3 operations');
-	t.equal(all.count({ target }), 3, 'new Trap(): has count 3');
-	t.equal(one.findAll({ target }).length, 1, 'new Trap(true): has 1 operation');
-	t.equal(one.count({ target }), 1, 'new Trap(true): has count 1');
+	t.equal(all.findAll({ target }).length, 4, 'new Trap(): has 4 operations');
+	t.equal(all.count({ target }), 4, 'new Trap(): has count 4');
+	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operation');
+	t.equal(one.count({ target }), 2, 'new Trap(true): has count 2');
 
 	t.end();
 });
@@ -265,7 +272,7 @@ test('Domain/Entity/Trap - commit', (t) => {
 });
 
 test('Domain/Entity/Trap - rollback', (t) => {
-	const [all, one] = runner((trap, name, single) => {
+	const [all, one] = runner((trap, name) => {
 		const target: any = { three: 3, four: 4 };
 
 		trap.defineProperty(target, 'one', { value: 1, enumerable: true });

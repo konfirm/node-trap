@@ -19,13 +19,20 @@ const key = 'myKey';
 const value = 'myValue';
 const target = { [key]: 'originalValue' };
 const mutation = new ValueMutation({ target, key, value });
+const addition = new ValueMutation({ target, key: 'new', value });
 
 test('Domain/ValueObject/ValueMutation - instance properties', (t) => {
 	t.equal(mutation.name, 'value-mutation', 'ValueMutation has name "value-mutation"');
 	t.equal(mutation.target, target, 'target is the provided target');
 	t.equal(mutation.key, key, `key is "${key}"`);
 	t.equal(mutation.value, value, `value is '${value}'`);
-	t.deepEqual(mutation.descriptor, { configurable: true, enumerable: true, value, writable: true }, `descriptor is { configurable: true, enumerable: true, value: "myValue", writable: true }`);
+	t.deepEqual(mutation.descriptor, { configurable: true, enumerable: true, value, writable: true }, `mutation descriptor is { configurable: true, enumerable: true, value: "myValue", writable: true }`);
+
+	t.equal(addition.name, 'value-mutation', 'ValueMutation has name "value-mutation"');
+	t.equal(addition.target, target, 'target is the provided target');
+	t.equal(addition.key, 'new', `key is "new"`);
+	t.equal(addition.value, value, `value is '${value}'`);
+	t.deepEqual(addition.descriptor, { value, configurable: true }, `addition descriptor is { value: "myValue", configurable: true }`);
 
 	t.end();
 });
