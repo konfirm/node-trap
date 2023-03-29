@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- Corrected reporting on the configurabilty of the PropertyDescriptor (configurable: true)
-
 ### Added
 ### Changed
 ### Removed
+
+
+## [2.0.1] - 2023-03-29
+
+### Fixed
+- Corrected reporting on the configurabilty of the PropertyDescriptor (configurable: true)
 
 
 ## [2.0.0] - 2023-03-24
@@ -121,7 +125,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Initial release.
 
 
-[Unreleased]: https://github.com/konfirm/node-trap/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/konfirm/node-trap/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/konfirm/node-trap/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/konfirm/node-trap/compare/v1.2.7...v2.0.0
 [1.2.7]: https://github.com/konfirm/node-trap/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/konfirm/node-trap/compare/v1.2.5...v1.2.6
