@@ -47,7 +47,7 @@ export class PropertyMutation<T extends MutationOptions = MutationOptions> exten
 	get descriptor(): PropertyDescriptor {
 		const { target, key } = this;
 
-		return DescriptorMapper.merge(Object.getOwnPropertyDescriptor(target, key), super.value)
+		return DescriptorMapper.merge(Object.getOwnPropertyDescriptor(target, key), super.value);
 	}
 
 	/**

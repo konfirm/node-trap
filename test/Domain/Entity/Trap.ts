@@ -56,9 +56,9 @@ test('Domain/Entity/Trap - defineProperty', (t) => {
 		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
-	t.equal(all.findAll({ target }).length, 3, 'new Trap(): has 3 operations');
+	t.equal(all.findAll({ target }).length, 3, 'new Trap(): has 3 mutations');
 	t.equal(all.count({ target }), 3, 'new Trap(): has count 3');
-	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operations');
+	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 mutations');
 	t.equal(one.count({ target }), 2, 'new Trap(true): has count 2');
 
 	t.end();
@@ -82,7 +82,7 @@ test('Domain/Entity/Trap - deleteProperty', (t) => {
 		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
-	t.equal(all.findAll({ target }).length, 3, 'new Trap(): has 3 operations');
+	t.equal(all.findAll({ target }).length, 3, 'new Trap(): has 3 mutations');
 	t.equal(all.count({ target }), 3, 'new Trap(): has count 3');
 	t.equal(one.findAll({ target }).length, 1, 'new Trap(true): has 1 operation');
 	t.equal(one.count({ target }), 1, 'new Trap(true): has count 1');
@@ -108,9 +108,9 @@ test('Domain/Entity/Trap - get', (t) => {
 		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
-	t.equal(all.findAll({ target }).length, 3, 'new Trap(): has 3 operations');
+	t.equal(all.findAll({ target }).length, 3, 'new Trap(): has 3 mutations');
 	t.equal(all.count({ target }), 3, 'new Trap(): has count 3');
-	t.equal(one.findAll({ target }).length, 0, 'new Trap(true): has 0 operations');
+	t.equal(one.findAll({ target }).length, 0, 'new Trap(true): has 0 mutations');
 	t.equal(one.count({ target }), 0, 'new Trap(true): has count 0');
 
 	t.end();
@@ -142,7 +142,7 @@ test('Domain/Entity/Trap - getOwnPropertyDescriptor', (t) => {
 		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
-	t.equal(all.findAll({ target }).length, 4, 'new Trap(): has 4 operations');
+	t.equal(all.findAll({ target }).length, 4, 'new Trap(): has 4 mutations');
 	t.equal(all.count({ target }), 4, 'new Trap(): has count 4');
 	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operation');
 	t.equal(one.count({ target }), 2, 'new Trap(true): has count 2');
@@ -171,9 +171,9 @@ test('Domain/Entity/Trap - has', (t) => {
 		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
-	t.equal(all.findAll({ target }).length, 4, 'new Trap(): has 4 operations');
+	t.equal(all.findAll({ target }).length, 4, 'new Trap(): has 4 mutations');
 	t.equal(all.count({ target }), 4, 'new Trap(): has count 4');
-	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operations');
+	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 mutations');
 	t.equal(one.count({ target }), 2, 'new Trap(true): has count 2');
 
 	t.end();
@@ -206,9 +206,9 @@ test('Domain/Entity/Trap - ownKeys', (t) => {
 		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
-	t.equal(all.findAll({ target }).length, 7, 'new Trap(): has 7 operations');
+	t.equal(all.findAll({ target }).length, 7, 'new Trap(): has 7 mutations');
 	t.equal(all.count({ target }), 7, 'new Trap(): has count 7');
-	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operations');
+	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 mutations');
 	t.equal(one.count({ target }), 2, 'new Trap(true): has count 2');
 
 	t.end();
@@ -238,9 +238,9 @@ test('Domain/Entity/Trap - set', (t) => {
 		t.equal(trap.count(), count, `${name}: has count ${count}`);
 	});
 
-	t.equal(all.findAll({ target }).length, 5, 'new Trap(): has 5 operations');
+	t.equal(all.findAll({ target }).length, 5, 'new Trap(): has 5 mutations');
 	t.equal(all.count({ target }), 5, 'new Trap(): has count 5');
-	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 operations');
+	t.equal(one.findAll({ target }).length, 2, 'new Trap(true): has 2 mutations');
 	t.equal(one.count({ target }), 2, 'new Trap(true): has count 2');
 
 	t.end();
@@ -263,9 +263,9 @@ test('Domain/Entity/Trap - commit', (t) => {
 		t.equal(trap.count(), 0, `${name}: has count 0`);
 	});
 
-	t.equal(all.findAll({}).length, 0, 'new Trap(): has 0 operations');
+	t.equal(all.findAll({}).length, 0, 'new Trap(): has 0 mutations');
 	t.equal(all.count({}), 0, 'Trap(): has count 0');
-	t.equal(one.findAll({}).length, 0, 'new Trap(true): has 0 operations');
+	t.equal(one.findAll({}).length, 0, 'new Trap(true): has 0 mutations');
 	t.equal(one.count({}), 0, 'new Trap(true): has count 0');
 
 	t.end();
@@ -290,9 +290,9 @@ test('Domain/Entity/Trap - rollback', (t) => {
 		t.equal(trap.count(), 0, `${name}: has count 0`);
 	});
 
-	t.equal(all.findAll({}).length, 0, 'new Trap(): has 0 operations');
+	t.equal(all.findAll({}).length, 0, 'new Trap(): has 0 mutations');
 	t.equal(all.count({}), 0, 'Trap(): has count 0');
-	t.equal(one.findAll({}).length, 0, 'new Trap(true): has 0 operations');
+	t.equal(one.findAll({}).length, 0, 'new Trap(true): has 0 mutations');
 	t.equal(one.count({}), 0, 'new Trap(true): has count 0');
 
 	t.end();
