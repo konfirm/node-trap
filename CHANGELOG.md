@@ -9,9 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Added
 ### Changed
-- updated dependencies
-
 ### Removed
+
+
+## [2.0.3] - 2023-10-25
+
+### Changed
+- updated dependencies
 
 
 ## [2.0.2] - 2023-03-29
@@ -133,7 +137,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Initial release.
 
 
-[Unreleased]: https://github.com/konfirm/node-trap/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/konfirm/node-trap/compare/v2.0.3...HEAD
+[2.0.3]: https://github.com/konfirm/node-trap/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/konfirm/node-trap/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/konfirm/node-trap/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/konfirm/node-trap/compare/v1.2.7...v2.0.0
